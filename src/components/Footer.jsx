@@ -152,7 +152,7 @@ const Footer = memo(() => {
             </div>
           </div>
           {/* Bottom section */}
-          <div className="border-t border-gray-600/50 pt-8 relative">
+          <div className="border-t border-gray-600/50 relative">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 relative z-10">
               <div className="flex items-center space-x-2 text-gray-800 text-sm group hover:scale-105 transition-transform duration-300">
