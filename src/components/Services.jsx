@@ -1,9 +1,70 @@
 import React from "react";
-import { Card, CardBody } from "./Card";
+import { motion } from "framer-motion";
+
+const cn = (...classes) => {
+  return classes.filter(Boolean).join(" ");
+};
+
+function Card({
+  children,
+  className,
+  patternClassName,
+  gradientClassName,
+}) {
+  return (
+    <motion.div
+      className={cn(
+        "w-full rounded-md overflow-hidden",
+        "border-transparent",
+        "p-3",
+        "relative group z-10",
+        className
+      )}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      <div
+        className="absolute top-0 left-0 z-0 h-full w-full rounded-sm
+            shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)]
+        transition-all
+        dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)] border-4 border-white/40"
+      />
+      <div
+        className="absolute top-0 left-0 isolate -z-10 h-full w-full rounded-md overflow-hidden"
+      />
+      <div
+        className={cn(
+          "absolute inset-0 z-5 w-full h-full bg-repeat",
+          "bg-[length:30px_30px]",
+          "bg-lines-pattern-light dark:bg-lines-pattern",
+          patternClassName
+        )}
+      >
+        <div
+          className={cn(
+            "w-full h-full bg-gradient-to-tr",
+            "from-white/5 via-white/0 to-white/0",
+            "dark:from-black/10 dark:via-black/0 dark:to-black/0",
+            gradientClassName
+          )}
+        />
+      </div>
+      <div className="absolute inset-0 z-10 bg-black/5 rounded-md backdrop-blur-[0px]"></div>
+      <div className="relative z-20">
+        {children}
+      </div>
+    </motion.div>
+  );
+}
+
+function CardBody({ className, ...props }) {
+  return <div className={cn("text-left p-4 md:p-6", className)} {...props} />;
+}
 
 const Services = () => {
   return (
-    <div className="h-screen w-screen flex flex-col justify-center items-center relative">
+    <div className="h-screen w-screen flex flex-col justify-center items-center relative overflow-hidden">
       <style jsx>{`
         @keyframes fadeInUp {
           from {
@@ -23,36 +84,6 @@ const Services = () => {
           }
           50% {
             transform: translateY(-10px);
-          }
-        }
-
-        @keyframes pulse {
-          0%,
-          100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-        }
-
-        @keyframes glow {
-          0%,
-          100% {
-            box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
-          }
-          50% {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6),
-              0 0 30px rgba(59, 130, 246, 0.4);
-          }
-        }
-
-        @keyframes shine {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
           }
         }
 
@@ -88,7 +119,7 @@ const Services = () => {
         }
 
         .hover-card:hover {
-          transform: translateY(-12px) rotateY(5deg) rotateX(5deg);
+          transform: translateY(-8px) rotateY(3deg) rotateX(3deg);
         }
 
         .hover-card-1:hover {
@@ -160,34 +191,46 @@ const Services = () => {
         .floating-animation:nth-child(3) {
           animation-delay: -4s;
         }
+
+        .special-font ss {
+          font-family: "silkserif";
+        }
+
+        .special-font cc {
+          font-family: "circular";
+        }
+        
+        .special-font sss {
+          font-family: "silkserif";
+          color: limegreen;
+        }
       `}</style>
-      <div className="absolute h-screen w-[96vw] rr bc rrCenter flex flex-col justify-center items-center overflow-y-auto">
-        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6">
-          {/* Services Title */}
-          <div className="text-center mb-8 sm:mb-10 md:mb-12 animate-fade-in-up">
-            <h2 className="text-xl special-font sm:text-2xl md:text-4xl lg:text-5xl font-bold text-gray-100 mb-3 sm:mb-4 px-1 ">
+      <div className="absolute h-screen w-[96vw] rr bc rrCenter flex flex-col justify-center items-center overflow-hidden">
+        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
+          {/* Services Title - Compact */}
+          <div className="text-center mb-3 sm:mb-4 md:mb-5 animate-fade-in-up">
+            <h2 className="text-3xl special-font sm:text-2xl md:text-3xl lg:text-6xl font-bold text-gray-100 mb-1 sm:mb-1.5 px-1">
               <cc>
                 Our<ss> Services</ss>
               </cc>
             </h2>
-            {/* <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 px-1 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-lime-500 transition-all duration-700 ease-in-out"></h2> */}
-            <p className="text-gray-300 special-font text-sm sm:text-base md:text-xl max-w-full sm:max-w-md md:max-w-lg lg:max-w-2xl mx-auto px-1 leading-relaxed">
+            <p className="text-gray-300 special-font text-md sm:text-sm md:text-xl max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-1 leading-relaxed">
               To Be Your Best Version <br /> Make your life <sss>Colorful</sss>
             </p>
           </div>
 
-          {/* Service Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 max-w-full">
-            {/* Service Card 1 */}
-            <Card className="hover-card hover-card-1 floating-animation w-full h-auto min-h-[180px] sm:min-h-[200px] md:h-56 lg:h-64 group">
-              <CardBody className="hover-gradient p-4 sm:p-5 h-full flex flex-col relative">
-                <div className="flex items-start mb-3 sm:mb-4 relative z-10">
-                  <div className="hover-icon w-1 sm:w-1.5 h-5 sm:h-6 bg-gradient-to-b from-blue-400 to-purple-500 rounded-full mr-3 flex-shrink-0 mt-1"></div>
-                  <h3 className="hover-text text-base sm:text-lg md:text-xl font-bold text-gray-100 leading-tight flex-1 group-hover:text-blue-300 transition-colors duration-300">
+          {/* Service Cards Grid - Compact */}
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5 md:gap-3 max-w-full">
+            {/* Service Card 1 - Compact */}
+            <Card className="hover-card hover-card-1 floating-animation w-full h-auto min-h-[130px] sm:min-h-[130px] md:h-40 lg:h-44 group">
+              <CardBody className="hover-gradient p-2 sm:p-2.5 md:p-3 h-full flex flex-col relative">
+                <div className="flex items-start mb-1.5 sm:mb-1.5 relative z-10">
+                  <div className="hover-icon w-1 sm:w-1 h-4 sm:h-4 bg-gradient-to-b from-blue-400 to-purple-500 rounded-full mr-2 flex-shrink-0 mt-1"></div>
+                  <h3 className="hover-text text-sm sm:text-base md:text-lg font-bold text-gray-100 leading-tight flex-1 group-hover:text-blue-300 transition-colors duration-300">
                     Interactive Learning Formats
                   </h3>
                 </div>
-                <p className="hover-text text-gray-300 text-sm sm:text-base leading-relaxed flex-1 relative z-10 group-hover:text-gray-200 transition-colors duration-300">
+                <p className="hover-text text-gray-300 text-sm sm:text-xs md:text-sm leading-relaxed flex-1 relative z-10 group-hover:text-gray-200 transition-colors duration-300">
                   Learn the way that suits you best, whether it's through
                   immersive videos, insightful audio sessions, or structured
                   documents. Our multi-format approach ensures you stay engaged
@@ -196,16 +239,16 @@ const Services = () => {
               </CardBody>
             </Card>
 
-            {/* Service Card 2 */}
-            <Card className="hover-card hover-card-2 floating-animation w-full h-auto min-h-[180px] sm:min-h-[200px] md:h-56 lg:h-64 group">
-              <CardBody className="hover-gradient p-4 sm:p-5 h-full flex flex-col relative">
-                <div className="flex items-start mb-3 sm:mb-4 relative z-10">
-                  <div className="hover-icon w-1 sm:w-1.5 h-5 sm:h-6 bg-gradient-to-b from-green-400 to-teal-500 rounded-full mr-3 flex-shrink-0 mt-1"></div>
-                  <h3 className="hover-text text-base sm:text-lg md:text-xl font-bold text-gray-100 leading-tight flex-1 group-hover:text-green-300 transition-colors duration-300">
+            {/* Service Card 2 - Compact */}
+            <Card className="hover-card hover-card-2 floating-animation w-full h-auto min-h-[130px] sm:min-h-[130px] md:h-40 lg:h-44 group">
+              <CardBody className="hover-gradient p-2 sm:p-2.5 md:p-3 h-full flex flex-col relative">
+                <div className="flex items-start mb-1.5 sm:mb-1.5 relative z-10">
+                  <div className="hover-icon w-1 sm:w-1 h-4 sm:h-4 bg-gradient-to-b from-green-400 to-teal-500 rounded-full mr-2 flex-shrink-0 mt-1"></div>
+                  <h3 className="hover-text text-sm sm:text-base md:text-lg font-bold text-gray-100 leading-tight flex-1 group-hover:text-green-300 transition-colors duration-300">
                     Guided Meditation
                   </h3>
                 </div>
-                <p className="hover-text text-gray-300 text-sm sm:text-base leading-relaxed flex-1 relative z-10 group-hover:text-gray-200 transition-colors duration-300">
+                <p className="hover-text text-gray-300 text-xs sm:text-xs md:text-sm leading-relaxed flex-1 relative z-10 group-hover:text-gray-200 transition-colors duration-300">
                   Find peace in the chaos with our guided meditation sessions.
                   Designed to reduce stress and improve focus, these sessions
                   help you reconnect with your inner calm one breath at a time.
@@ -213,16 +256,16 @@ const Services = () => {
               </CardBody>
             </Card>
 
-            {/* Service Card 3 */}
-            <Card className="hover-card hover-card-3 floating-animation w-full h-auto min-h-[180px] sm:min-h-[200px] md:h-56 lg:h-64 group md:col-span-2 lg:col-span-1">
-              <CardBody className="hover-gradient p-4 sm:p-5 h-full flex flex-col relative">
-                <div className="flex items-start mb-3 sm:mb-4 relative z-10">
-                  <div className="hover-icon w-1 sm:w-1.5 h-5 sm:h-6 bg-gradient-to-b from-orange-400 to-red-500 rounded-full mr-3 flex-shrink-0 mt-1"></div>
-                  <h3 className="hover-text text-base sm:text-lg md:text-xl font-bold text-gray-100 leading-tight flex-1 group-hover:text-orange-300 transition-colors duration-300">
+            {/* Service Card 3 - Compact */}
+            <Card className="hover-card hover-card-3 floating-animation w-full h-auto min-h-[130px] sm:min-h-[130px] md:h-40 lg:h-44 group md:col-span-2 lg:col-span-1">
+              <CardBody className="hover-gradient p-2 sm:p-2.5 md:p-3 h-full flex flex-col relative">
+                <div className="flex items-start mb-1.5 sm:mb-1.5 relative z-10">
+                  <div className="hover-icon w-1 sm:w-1 h-4 sm:h-4 bg-gradient-to-b from-orange-400 to-red-500 rounded-full mr-2 flex-shrink-0 mt-1"></div>
+                  <h3 className="hover-text text-sm sm:text-base md:text-lg font-bold text-gray-100 leading-tight flex-1 group-hover:text-orange-300 transition-colors duration-300">
                     AI-Powered Chatbot Support
                   </h3>
                 </div>
-                <p className="hover-text text-gray-300 text-sm sm:text-base leading-relaxed flex-1 relative z-10 group-hover:text-gray-200 transition-colors duration-300">
+                <p className="hover-text text-gray-300 text-xs sm:text-xs md:text-sm leading-relaxed flex-1 relative z-10 group-hover:text-gray-200 transition-colors duration-300">
                   Get instant answers and round-the-clock assistance with our
                   AI-powered support system. Designed to handle queries
                   efficiently and guide you without delays.
