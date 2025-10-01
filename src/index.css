@@ -54,7 +54,7 @@ body {
   }
 
   .bc {
-    background-image: url("./public/img/ss3.png");
+    background-image: url("/img/ss3.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -223,83 +223,83 @@ body {
   }
 
   .tt2 {
-    background-image: url("./public/img/ss7.png");
+    background-image: url("/img/ss7.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt3 {
-    background-image: url("./public/img/ss4.jpg");
+    background-image: url("/img/ss4.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt4 {
-    background-image: url("./public/img/ss6.png");
+    background-image: url("/img/ss6.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt5 {
-    background-image: url("./public/img/x.png");
+    background-image: url("/img/x.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt6 {
-    background-image: url("./public/img/blue.jpg");
+    background-image: url("/img/blue.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt7 {
-    background-image: url("./public/img/z.png");
+    background-image: url("/img/z.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
   .tt8 {
-    background-image: url("./public/img/vv.png");
+    background-image: url("/img/vv.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt9 {
-    background-image: url("./public/img/zz.png");
+    background-image: url("/img/zz.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt10 {
-    background-image: url("./public/img/zzz.png");
+    background-image: url("/img/zzz.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt11 {
-    background-image: url("./public/img/xxx.png");
+    background-image: url("/img/xxx.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt12 {
-    background-image: url("./public/img/xxxx.png");
+    background-image: url("/img/xxxx.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
 
   .tt13 {
-    background-image: url("./public/img/bbb.png");
+    background-image: url("/img/bbb.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
