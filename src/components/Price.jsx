@@ -440,7 +440,7 @@ const Price = () => {
       {/* Primary container with minimal padding */}
       <div className="h-[100vh] w-screen flex flex-col justify-center items-center relative p-1"> {/* Reduced vertical padding p-2 to p-1 */}
         {/* Background/Content wrapper - Removed overflow-y-auto to ensure strict fit */}
-        <div className="absolute h-[98vh] w-[98vw] rr tt7 rrCenter flex flex-col justify-center items-center pt-2 pb-2 lg:pt-4 lg:pb-4 overflow-hidden"> 
+        <div className="absolute h-[96vh] w-[96vw] rr tt7 rrCenter flex flex-col justify-center items-center pt-2 pb-2 lg:pt-4 lg:pb-4 overflow-hidden"> 
           
           {/* Header Section */}
           <div className="text-center mb-1 sm:mb-2 lg:mb-4 px-1 sm:px-2 lg:px-4"> 

@@ -247,7 +247,7 @@ const MentalHealthTest = () => {
 
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center relative text-white overflow-hidden p-2">
-      <div className="absolute h-full w-[98vw] rr tt10 rrCenter flex flex-col justify-center items-center overflow-hidden">
+      <div className="absolute h-full w-[96vw] rr tt10 rrCenter flex flex-col justify-center items-center overflow-hidden">
         {/* Adjusted max-w-4xl to max-w-2xl and added p-2 for slightly smaller margins */}
         <div className="w-full max-w-2xl mx-auto p-2 h-full flex flex-col justify-center overflow-y-auto">
           {/* Section Header - Compact */}
@@ -406,36 +406,42 @@ const MentalHealthTest = () => {
                   </div>
                 </div>
 
-                {/* Question - Compact */}
-                <div className="mb-3">
+                {/* Question - Compact - REDUCED PADDING/MARGIN */}
+                <div className="mb-2">
                   {" "}
-                  {/* Reduced mb-4 to mb-3 */}
-                  <div className="bg-blue-50 p-3 rounded-lg mb-2">
+                  {/* Reduced mb-3 to mb-2 */}
+                  <div className="bg-blue-50 p-2 sm:p-3 rounded-lg mb-1">
                     {" "}
-                    {/* Reduced mb-3 to mb-2 */}
+                    {/* Reduced p-3 to p-2 for small screens, mb-2 to mb-1 */}
                     <p className="text-xs text-blue-600 font-medium mb-0.5">
                       {currentQuestion.scale} •{" "}
                       {currentQuestion.clinicalSignificance}
                     </p>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-0.5">
+                      {" "}
+                      {/* Reduced font size for small screens */}
                       Over the last 2 weeks, how often have you been bothered
                       by:
                     </h3>
                   </div>
-                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-3 rounded-lg mb-3">
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-2 sm:p-3 rounded-lg mb-2">
+                    {" "}
+                    {/* Reduced p-3 to p-2 for small screens, mb-3 to mb-2 */}
                     <p className="text-base text-gray-800 leading-relaxed font-medium">
                       {currentQuestion.text}
                     </p>
                   </div>
                 </div>
 
-                {/* Response Options - Compact */}
-                <div className="space-y-2 mb-4">
+                {/* Response Options - Compact - REDUCED PADDING/SPACING */}
+                <div className="space-y-1 mb-3">
+                  {" "}
+                  {/* Reduced space-y-2 to space-y-1, mb-4 to mb-3 */}
                   {scaleOptions.map((option) => (
                     <label
                       key={option.value}
-                      className={`flex items-center p-2.5 border-2 rounded-lg cursor-pointer transition-all hover:shadow-sm ${
-                        // Reduced p-3 to p-2.5
+                      className={`flex items-center p-2 border-2 rounded-lg cursor-pointer transition-all hover:shadow-sm ${
+                        // Reduced p-2.5 to p-2
                         responses[currentQuestion.id] === option.value
                           ? "border-blue-500 bg-blue-50 ring-2 ring-blue-100"
                           : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
@@ -449,13 +455,17 @@ const MentalHealthTest = () => {
                         onChange={() =>
                           handleResponse(currentQuestion.id, option.value)
                         }
-                        className="mr-3 h-4 w-4 text-blue-600"
+                        className="mr-2 h-3.5 w-3.5 text-blue-600" // Reduced h-4 w-4 to h-3.5 w-3.5, mr-3 to mr-2
                       />
                       <div className="flex-1">
-                        <div className="font-semibold text-gray-900 text-base mb-0.5">
+                        <div className="font-semibold text-gray-900 text-sm sm:text-base mb-0">
+                          {" "}
+                          {/* Reduced font size for small screens, mb-0.5 to mb-0 */}
                           {option.label}
                         </div>
-                        <div className="text-gray-600 text-sm">
+                        <div className="text-gray-600 text-xs sm:text-sm">
+                          {" "}
+                          {/* Reduced font size for small screens */}
                           {option.description}
                         </div>
                       </div>
@@ -463,13 +473,13 @@ const MentalHealthTest = () => {
                   ))}
                 </div>
 
-                {/* Navigation - Compact */}
+                {/* Navigation - Compact - REDUCED PADDING */}
                 <div className="flex justify-between">
                   <button
                     onClick={previousQuestion}
                     disabled={isFirstQuestion}
-                    className={`flex items-center px-4 py-2 rounded-lg font-semibold text-base transition-all ${
-                      // Reduced px-5 py-2.5 to px-4 py-2
+                    className={`flex items-center px-3 py-1.5 rounded-lg font-semibold text-sm sm:text-base transition-all ${
+                      // Reduced px-4 py-2 to px-3 py-1.5, reduced text size
                       isFirstQuestion
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-sm"
@@ -483,8 +493,8 @@ const MentalHealthTest = () => {
                   <button
                     onClick={nextQuestion}
                     disabled={!hasAnsweredCurrent}
-                    className={`flex items-center px-4 py-2 rounded-lg font-semibold text-base transition-all ${
-                      // Reduced px-5 py-2.5 to px-4 py-2
+                    className={`flex items-center px-3 py-1.5 rounded-lg font-semibold text-sm sm:text-base transition-all ${
+                      // Reduced px-4 py-2 to px-3 py-1.5, reduced text size
                       !hasAnsweredCurrent
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                         : isLastQuestion
