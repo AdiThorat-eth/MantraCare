@@ -93,12 +93,14 @@ export default function FaqPage() {
   }, []);
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center relative overflow-hidden">
+    // Reduced py-12 to py-4, reduced px-4 to px-2
+    <div className="min-h-screen py-4 px-2 sm:px-4 lg:px-6 flex items-center justify-center relative overflow-hidden">
       <div className="absolute h-[96vh] w-[96vw] rr tt8 rrCenter flex flex-col justify-center items-center">
-        <div className="max-w-4xl w-full space-y-6 relative z-10 px-4">
+        {/* Reduced max-w-4xl to max-w-2xl, reduced space-y-6 to space-y-3, reduced px-4 to px-2 */}
+        <div className="max-w-2xl w-full space-y-3 relative z-10 px-2">
           {/* Header */}
-          <div className="text-center space-y-4">
-            <div className="space-y-2">
+          <div className="text-center space-y-2"> {/* Reduced space-y-4 to space-y-2 */}
+            <div className="space-y-1"> {/* Reduced space-y-2 to space-y-1 */}
               <h1
                 className="text-3xl md:text-4xl special-font bg-clip-text bg-gradient-to-r from-blue-900 to-purple-900 text-transparent"
                 ref={titleRef} // Assign the ref to the h1 element
@@ -107,7 +109,8 @@ export default function FaqPage() {
                   Frequently Asked <ss>Questions</ss>
                 </ccc>
               </h1>
-              <p className="text-md text-black max-w-xl mx-auto">
+              {/* Reduced max-w-xl to max-w-lg */}
+              <p className="text-md text-black max-w-lg mx-auto">
                 <b>
                   Find answers to common questions about Mantra and our mental
                   health support services.
@@ -117,11 +120,11 @@ export default function FaqPage() {
           </div>
 
           {/* FAQ Accordion */}
-          <div className="space-y-4">
+          <div className="space-y-2"> {/* Reduced space-y-4 to space-y-2 */}
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className={`group bg-white/80 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 border border-white/20 overflow-hidden ${
+                className={`group bg-white/80 backdrop-blur-sm rounded-lg shadow-md hover:shadow-lg transition-all duration-500 border border-white/20 overflow-hidden ${ // Reduced rounded-xl to rounded-lg and shadows
                   openIndex === index
                     ? "ring-2 ring-purple-200 shadow-purple-100/50"
                     : ""
@@ -129,15 +132,15 @@ export default function FaqPage() {
               >
                 <button
                   onClick={() => toggleFaq(index)}
-                  className="flex justify-between items-center w-full p-4 text-left focus:outline-none group-hover:bg-gradient-to-r group-hover:from-purple-50/50 group-hover:to-pink-50/50 transition-all duration-300"
+                  className="flex justify-between items-center w-full p-3 text-left focus:outline-none group-hover:bg-gradient-to-r group-hover:from-purple-50/50 group-hover:to-pink-50/50 transition-all duration-300" // Reduced p-4 to p-3
                 >
-                  <div className="flex items-center space-x-3 flex-1">
+                  <div className="flex items-center space-x-2 flex-1"> {/* Reduced space-x-3 to space-x-2 */}
                     <div
-                      className={`flex-shrink-0 w-10 h-10 bg-gradient-to-tr ${faq.gradient} rounded-lg flex items-center justify-center text-white shadow-lg transform transition-transform group-hover:scale-110`}
+                      className={`flex-shrink-0 w-8 h-8 bg-gradient-to-tr ${faq.gradient} rounded-md flex items-center justify-center text-white shadow-md transform transition-transform group-hover:scale-110`} // Reduced w-10 h-10 to w-8 h-8, rounded-lg to rounded-md, shadow-lg to shadow-md
                     >
                       {faq.icon}
                     </div>
-                    <span className="font-semibold text-gray-900 text-base leading-relaxed pr-2">
+                    <span className="font-semibold text-gray-900 text-base leading-relaxed pr-1"> {/* Reduced pr-2 to pr-1 */}
                       {faq.question}
                     </span>
                   </div>
@@ -157,9 +160,9 @@ export default function FaqPage() {
                       : "max-h-0 opacity-0"
                   } overflow-hidden`}
                 >
-                  <div className="px-4 pb-4">
-                    <div className="ml-12 pr-6">
-                      <div className="h-px bg-gradient-to-r from-purple-200 via-pink-200 to-transparent mb-2"></div>
+                  <div className="px-3 pb-3"> {/* Reduced px-4 pb-4 to px-3 pb-3 */}
+                    <div className="ml-10 pr-4"> {/* Reduced ml-12 to ml-10, reduced pr-6 to pr-4 */}
+                      <div className="h-px bg-gradient-to-r from-purple-200 via-pink-200 to-transparent mb-1"></div> {/* Reduced mb-2 to mb-1 */}
                       <p className="text-gray-700 text-sm leading-relaxed">
                         {faq.answer}
                       </p>
@@ -171,8 +174,8 @@ export default function FaqPage() {
           </div>
 
           {/* Footer CTA */}
-          <div className="text-center pt-6">
-            <div className="inline-flex items-center space-x-1 text-xs text-gray-500 bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/30">
+          <div className="text-center pt-3"> {/* Reduced pt-6 to pt-3 */}
+            <div className="inline-flex items-center space-x-1 text-xs text-gray-500 bg-white/60 backdrop-blur-sm px-2 py-1 rounded-full border border-white/30"> {/* Reduced padding */}
               <Heart className="h-3 w-3 text-pink-500" />
               <span>Your mental health matters</span>
               <Heart className="h-3 w-3 text-pink-500" />

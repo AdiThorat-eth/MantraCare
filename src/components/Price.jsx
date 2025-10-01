@@ -5,6 +5,7 @@ const cn = (...classes) => {
   return classes.filter(Boolean).join(" ");
 };
 
+// Replicating the Card component from Price.jsx (without motion)
 export function Card({
   children,
   className,
@@ -16,7 +17,7 @@ export function Card({
       className={cn(
         "w-full rounded-md overflow-hidden",
         "border-transparent",
-        "p-3",
+        "p-1 lg:p-3", // Reduced p-2 to p-1 for mobile/tablet
         "relative group z-10",
         className
       )}
@@ -34,17 +35,9 @@ export function Card({
         dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)] border-4 border-white/40"
       />
       {/* Layer 2: Backdrop Filter (Distortion effect) - REMOVED OR MODIFIED */}
-      {/* You can remove this div entirely or just the style prop */}
-      {/*
       <div
         className="absolute top-0 left-0 isolate -z-10 h-full w-full rounded-md overflow-hidden"
-        style={{ backdropFilter: 'url("#liquid-glass-filter")' }}
-      />
-      */}
-      {/* Or, to remove the filter effect while keeping the div, change the style: */}
-      <div
-        className="absolute top-0 left-0 isolate -z-10 h-full w-full rounded-md overflow-hidden"
-        // style={{ backdropFilter: 'none' }} // Or remove this line entirely
+        // style={{ backdropFilter: 'none' }} 
       />
       {/* Layer 3: The Diagonal Lines Pattern and Gradient */}
       <div
@@ -67,19 +60,13 @@ export function Card({
         </div>
       </div>
       {/* Layer 4: Text Background for Readability (Semi-transparent overlay over lines/glass) */}
-      {/* Reduced opacity to make lines more visible */}
       <div className="absolute inset-0 z-10 bg-black/5 rounded-md backdrop-blur-[0px]"></div>{" "}
-      {/* Changed backdrop-blur-[1px] to backdrop-blur-[0px] */}
       {/* Layer 5: Actual Card Content */}
       <div className="relative z-20">
         {" "}
-        {/* z-20 to ensure content is always on top */}
         {children}
       </div>
       {/* SVG Filter Definition - IMPORTANT: This filter is no longer used if backdropFilter is removed */}
-      {/* You can move this to a higher-level component if other elements use it,
-          otherwise, if only this card used it and you've removed the backdropFilter,
-          you could potentially remove this SVG block from here too. */}
       <svg className="hidden">
         <defs>
           <filter
@@ -124,8 +111,10 @@ export function Card({
 }
 
 export function CardBody({ className, ...props }) {
-  return <div className={cn("text-left p-4 md:p-6", className)} {...props} />;
+  // Drastically reduced padding for small screens, maintained p-6 for large screens
+  return <div className={cn("text-left p-2 sm:p-3 md:p-4 lg:p-6 flex flex-col relative overflow-visible", className)} {...props} />;
 }
+
 
 const Price = () => {
   const [isAnnual, setIsAnnual] = useState(false);
@@ -214,7 +203,8 @@ const Price = () => {
   ];
 
   return (
-    <div className="h-screen w-screen flex flex-col justify-center items-center relative">
+    // Outer div for H-Screen and overflow-hidden
+    <div className="h-screen w-screen flex flex-col justify-center items-center relative overflow-hidden">
       <style jsx>{`
         @keyframes fadeInUp {
           from {
@@ -447,14 +437,17 @@ const Price = () => {
         }
       `}</style>
 
-      <div className="h-[100vh] w-screen flex flex-col justify-center items-center relative">
-        <div className="absolute h-[96vh] w-[96vw] rr tt7 rrCenter flex flex-col justify-center items-center overflow-y-hidden">
+      {/* Primary container with minimal padding */}
+      <div className="h-[100vh] w-screen flex flex-col justify-center items-center relative p-1"> {/* Reduced vertical padding p-2 to p-1 */}
+        {/* Background/Content wrapper - Removed overflow-y-auto to ensure strict fit */}
+        <div className="absolute h-[98vh] w-[98vw] rr tt7 rrCenter flex flex-col justify-center items-center pt-2 pb-2 lg:pt-4 lg:pb-4 overflow-hidden"> 
+          
           {/* Header Section */}
-          <div className="text-center mb-4 sm:mb-6 lg:mb-8 px-4">
+          <div className="text-center mb-1 sm:mb-2 lg:mb-4 px-1 sm:px-2 lg:px-4"> 
             <h1
               ref={titleRef}
               data-element="title"
-              className={`text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-4 animate-typewriter inline-block ${
+              className={`text-lg sm:text-xl md:text-2xl lg:text-4xl font-bold text-white mb-0.5 animate-typewriter inline-block ${ // Reduced small screen size again
                 isVisible.title ? "visible" : ""
               }`}
             >
@@ -470,7 +463,7 @@ const Price = () => {
             <p
               ref={desc1Ref}
               data-element="description1"
-              className={`text-sm sm:text-base lg:text-lg text-white/90 max-w-2xl mx-auto mb-2 sm:mb-3 animate-slide-left ${
+              className={`text-[10px] sm:text-xs lg:text-lg text-white/90 max-w-2xl mx-auto mb-0.5 animate-slide-left ${ // Reduced small screen size
                 isVisible.description1 ? "visible" : ""
               }`}
             >
@@ -480,23 +473,23 @@ const Price = () => {
             <p
               ref={desc2Ref}
               data-element="description2"
-              className={`text-sm sm:text-base lg:text-lg text-white/90 max-w-2xl mx-auto mb-4 sm:mb-6 animate-slide-right ${
+              className={`text-[10px] sm:text-xs lg:text-lg text-white/90 max-w-2xl mx-auto mb-1 sm:mb-2 lg:mb-4 animate-slide-right ${ // Reduced small screen size
                 isVisible.description2 ? "visible" : ""
               }`}
             >
               Start your wellness journey today with our comprehensive platform.
             </p>
 
-            {/* Billing Toggle */}
+            {/* Billing Toggle - Minimized all sizing */}
             <div
               ref={toggleRef}
               data-element="toggle"
-              className={`flex items-center justify-center mb-4 sm:mb-6 animate-scale-in ${
+              className={`flex items-center justify-center mb-1 sm:mb-2 lg:mb-4 animate-scale-in ${ 
                 isVisible.toggle ? "visible" : ""
               }`}
             >
               <span
-                className={`text-xs sm:text-sm font-medium ${
+                className={`text-[9px] sm:text-[10px] font-medium ${ // Minimized font size
                   !isAnnual ? "text-white" : "text-white/60"
                 }`}
               >
@@ -504,23 +497,23 @@ const Price = () => {
               </span>
               <button
                 onClick={() => setIsAnnual(!isAnnual)}
-                className="mx-3 sm:mx-4 relative inline-flex h-5 sm:h-6 w-9 sm:w-11 items-center rounded-full bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="mx-1.5 sm:mx-2 relative inline-flex h-3 sm:h-3.5 w-6 sm:w-7 items-center rounded-full bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" // Minimized component size
               >
                 <span
-                  className={`inline-block h-3 sm:h-4 w-3 sm:w-4 transform rounded-full bg-white transition-transform ${
+                  className={`inline-block h-2.5 w-2.5 transform rounded-full bg-white transition-transform ${ 
                     isAnnual
-                      ? "translate-x-5 sm:translate-x-6 bg-blue-600"
-                      : "translate-x-1"
+                      ? "translate-x-3 sm:translate-x-4 bg-blue-600"
+                      : "translate-x-0.5"
                   }`}
                 />
               </button>
               <span
-                className={`text-xs sm:text-sm font-medium ${
+                className={`text-[9px] sm:text-[10px] font-medium ${ // Minimized font size
                   isAnnual ? "text-white" : "text-white/60"
                 }`}
               >
                 Annual
-                <span className="ml-1 inline-flex items-center rounded-full bg-green-500 px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-medium text-white">
+                <span className="ml-0.5 inline-flex items-center rounded-full bg-green-500 px-0.5 py-0 text-[7px] font-medium text-white"> {/* Minimized badge size */}
                   Save 30%
                 </span>
               </span>
@@ -528,14 +521,14 @@ const Price = () => {
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-7xl mx-auto px-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 lg:gap-6 max-w-7xl mx-auto px-1 sm:px-2 lg:px-4 w-full"> 
             {/* Popular Badge */}
             <div
-              className="absolute top-[25vh] sm:top-[30vh] lg:top-[32.5vh] left-1/2 transform -translate-x-1/2 hidden lg:block"
+              className="absolute top-[20vh] sm:top-[25vh] lg:top-[35vh] left-1/2 transform -translate-x-1/2 hidden lg:block" // Adjusted top position
               style={{ zIndex: 1000 }}
             >
-              <span className="popular-badge inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-blue-500 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white shadow-xl border-2 border-white/20">
-                <Star className="w-3 sm:w-4 h-3 sm:h-4 mr-1 fill-white" />
+              <span className="popular-badge inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-blue-500 px-2 py-1 text-xs font-medium text-white shadow-xl border-2 border-white/20">
+                <Star className="w-3 h-3 mr-1 fill-white" />
                 Most Popular
               </span>
             </div>
@@ -553,39 +546,41 @@ const Price = () => {
                   tier.popular ? "lg:transform lg:scale-105" : "hover:scale-105"
                 } relative`}
               >
-                <CardBody className="hover-gradient p-3 sm:p-4 lg:p-6 h-[45vh] sm:h-[50vh] lg:h-[55vh] flex flex-col relative overflow-visible">
+                {/* Removed fixed height, using min-h only for desktop to maintain aesthetic balance */}
+                <CardBody className={`hover-gradient min-h-[auto] lg:min-h-[35vh] flex flex-col relative overflow-visible`}> 
+                  
                   {/* Mobile Popular Badge */}
                   {tier.popular && (
-                    <div className="flex justify-center mb-3 lg:hidden">
-                      <span className="popular-badge inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-blue-500 px-3 py-1.5 text-xs font-medium text-white shadow-xl border-2 border-white/20">
-                        <Star className="w-3 h-3 mr-1 fill-white" />
-                        Most Popular
+                    <div className="flex justify-center mb-0.5 lg:hidden"> {/* Reduced margin */}
+                      <span className="popular-badge inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-blue-500 px-1.5 py-0.5 text-[10px] font-medium text-white shadow-xl border-2 border-white/20"> {/* Minimized padding/font size */}
+                        <Star className="w-2.5 h-2.5 mr-0.5 fill-white" />
+                        Popular
                       </span>
                     </div>
                   )}
 
-                  <div className="text-center mb-3 sm:mb-4 lg:mb-6 relative z-20">
-                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-1 sm:mb-2">
+                  <div className="text-center mb-1 sm:mb-2 lg:mb-3 relative z-20"> 
+                    <h3 className="text-sm sm:text-base lg:text-xl font-bold text-white mb-0"> {/* Reduced small screen size and removed margin */}
                       {tier.name}
                     </h3>
-                    <p className="text-xs sm:text-sm text-white/80 mb-2 sm:mb-3 leading-relaxed">
+                    <p className="text-[9px] sm:text-[10px] lg:text-sm text-white/80 mb-1 leading-snug"> {/* Reduced small screen size and leading */}
                       {tier.description}
                     </p>
                     <div className="flex items-baseline justify-center">
-                      <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+                      <span className="text-lg sm:text-xl lg:text-3xl font-bold text-white">
                         {tier.price}
                       </span>
-                      <span className="text-sm sm:text-base lg:text-lg text-white/70 ml-1">
+                      <span className="text-xs sm:text-sm lg:text-lg text-white/70 ml-0.5"> {/* Reduced small screen size and margin */}
                         {tier.period}
                       </span>
                     </div>
                   </div>
 
-                  <ul className="space-y-1.5 sm:space-y-2 lg:space-y-3 mb-3 sm:mb-4 lg:mb-6 flex-1 relative z-20">
+                  <ul className="space-y-0.5 mb-2 sm:mb-3 lg:mb-4 flex-1 relative z-20"> {/* Minimized spacing */}
                     {tier.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start">
-                        <Check className="w-3 sm:w-4 lg:w-5 h-3 sm:h-4 lg:h-5 text-green-400 mr-2 sm:mr-3 mt-0.5 flex-shrink-0" />
-                        <span className="text-xs sm:text-sm text-white/90 leading-relaxed">
+                        <Check className="w-2.5 h-2.5 text-green-400 mr-1 mt-0.5 flex-shrink-0" /> {/* Minimized icon size */}
+                        <span className="text-[10px] lg:text-sm text-white/90 leading-snug"> {/* Minimized small screen text size */}
                           {feature}
                         </span>
                       </li>
@@ -593,7 +588,7 @@ const Price = () => {
                   </ul>
 
                   <button
-                    className={`relative z-20 w-full py-2 sm:py-2.5 lg:py-3 px-3 sm:px-4 lg:px-6 rounded-xl font-semibold text-xs sm:text-sm lg:text-base transition-all duration-200 ${
+                    className={`relative z-20 w-full py-1 sm:py-1.5 lg:py-3 px-3 rounded-xl font-semibold text-xs lg:text-base transition-all duration-200 ${ // Minimized button size
                       tier.popular
                         ? "bg-gradient-to-r from-green-500 to-blue-500 text-white hover:from-green-600 hover:to-blue-600 shadow-lg hover:shadow-xl"
                         : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm border border-white/30"
