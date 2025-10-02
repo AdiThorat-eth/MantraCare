@@ -35,10 +35,25 @@ const MiniNavbar = () => {
         closeMenu();
       },
     },
+    // {
+    //   name: "services",
+    //   action: () => {
+    //     window.location.href = "#services";
+    //     closeMenu();
+    //   },
+    // },
+
+    // {
+    //   name: "tracker",
+    //   action: () => {
+    //     window.location.href = "#moodtracker";
+    //     closeMenu();
+    //   },
+    // },
     {
-      name: "services",
+      name: "test",
       action: () => {
-        window.location.href = "#services";
+        window.location.href = "#mentalhealthtest";
         closeMenu();
       },
     },
@@ -50,19 +65,40 @@ const MiniNavbar = () => {
       },
     },
     {
+      name: "doctors",
+      action: () => {
+        window.location.href = "#doctor";
+        closeMenu();
+      },
+    },
+    {
       name: "Features",
       action: () => {
         window.location.href = "#features";
         closeMenu();
       },
     },
-    {
-      name: "Testimonial",
-      action: () => {
-        window.location.href = "#testimonial";
-        closeMenu();
-      },
-    },
+    // {
+    //   name: "Testimonial",
+    //   action: () => {
+    //     window.location.href = "#testimonial";
+    //     closeMenu();
+    //   },
+    // },
+    // {
+    //   name: "faq",
+    //   action: () => {
+    //     window.location.href = "#faq";
+    //     closeMenu();
+    //   },
+    // },
+    // {
+    //   name: "helpline",
+    //   action: () => {
+    //     window.location.href = "#crisissupport";
+    //     closeMenu();
+    //   },
+    // },
     {
       name: "about",
       action: () => {
@@ -214,7 +250,7 @@ const MiniNavbar = () => {
           <div className="font-circular">
             <p className="tracking-wider text-white/50">Email</p>
             <p className="text-xl tracking-widest lowercase text-pretty">
-              Mantra.care@xyz.com
+              Mantra.care.in1@gmail.com
             </p>
           </div>
         </div>
