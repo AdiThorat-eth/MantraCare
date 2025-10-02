@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 const cn = (...classes) => {
@@ -63,6 +63,104 @@ function CardBody({ className, ...props }) {
 }
 
 const Services = () => {
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+
+  useEffect(() => {
+    // Load GSAP and ScrollTrigger from CDN
+    const loadGSAP = async () => {
+      if (window.gsap && window.ScrollTrigger) {
+        initAnimations();
+        return;
+      }
+
+      const gsapScript = document.createElement('script');
+      gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js';
+      document.head.appendChild(gsapScript);
+
+      gsapScript.onload = () => {
+        const scrollTriggerScript = document.createElement('script');
+        scrollTriggerScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js';
+        document.head.appendChild(scrollTriggerScript);
+
+        scrollTriggerScript.onload = () => {
+          window.gsap.registerPlugin(window.ScrollTrigger);
+          initAnimations();
+        };
+      };
+    };
+
+    const initAnimations = () => {
+      const { gsap } = window;
+      const { ScrollTrigger } = window;
+
+      // Split text into words for "Our Services"
+      if (titleRef.current) {
+        const words = titleRef.current.querySelectorAll('.word');
+        
+        gsap.fromTo(
+          words,
+          {
+            opacity: 0,
+            y: 50,
+            rotationX: -90,
+            transformOrigin: "50% 50%"
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotationX: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+              trigger: titleRef.current,
+              start: "top 80%",
+              end: "top 50%",
+              toggleActions: "play none none reverse",
+              // Make it repeatable
+              once: false
+            }
+          }
+        );
+      }
+
+      // Animate subtitle with a glowing effect
+      if (subtitleRef.current) {
+        gsap.fromTo(
+          subtitleRef.current,
+          {
+            opacity: 0,
+            scale: 0.8,
+            filter: "blur(10px)"
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            filter: "blur(0px)",
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: subtitleRef.current,
+              start: "top 80%",
+              end: "top 50%",
+              toggleActions: "play none none reverse",
+              once: false
+            }
+          }
+        );
+      }
+    };
+
+    loadGSAP();
+
+    return () => {
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      }
+    };
+  }, []);
+
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center relative overflow-hidden">
       <style jsx>{`
@@ -204,17 +302,34 @@ const Services = () => {
           font-family: "silkserif";
           color: limegreen;
         }
+
+        .word {
+          display: inline-block;
+          margin: 0 8px;
+          perspective: 1000px;
+        }
+
+        .title-container {
+          perspective: 1000px;
+        }
       `}</style>
       <div className="absolute h-screen w-[96vw] rr bc rrCenter flex flex-col justify-center items-center overflow-hidden">
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
           {/* Services Title - Compact */}
-          <div className="text-center mb-3 sm:mb-4 md:mb-5 animate-fade-in-up">
-            <h2 className="text-3xl special-font sm:text-2xl md:text-3xl lg:text-6xl font-bold text-gray-100 mb-1 sm:mb-1.5 px-1">
+          <div className="text-center mb-3 sm:mb-4 md:mb-5">
+            <h2 
+              ref={titleRef}
+              className="text-3xl special-font sm:text-2xl md:text-3xl lg:text-6xl font-bold text-gray-100 mb-1 sm:mb-1.5 px-1 title-container"
+            >
               <cc>
-                Our<ss> Services</ss>
+                <span className="word">Our</span>
+                <ss><span className="word">Services</span></ss>
               </cc>
             </h2>
-            <p className="text-gray-300 special-font text-md sm:text-sm md:text-xl max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-1 leading-relaxed">
+            <p 
+              ref={subtitleRef}
+              className="text-gray-300 special-font text-md sm:text-sm md:text-xl max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto px-1 leading-relaxed"
+            >
               To Be Your Best Version <br /> Make your life <sss>Colorful</sss>
             </p>
           </div>

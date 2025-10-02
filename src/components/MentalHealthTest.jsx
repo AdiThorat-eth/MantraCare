@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Brain,
   AlertTriangle,
@@ -17,6 +17,106 @@ const MentalHealthTest = () => {
   const [results, setResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [testStarted, setTestStarted] = useState(false);
+  
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const [titleText, setTitleText] = useState("Mental Health Assessment");
+  const originalTitle = "Mental Health Assessment";
+
+  useEffect(() => {
+    // Load GSAP and ScrollTrigger from CDN
+    const gsapScript = document.createElement('script');
+    gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js';
+    gsapScript.async = true;
+    
+    const scrollTriggerScript = document.createElement('script');
+    scrollTriggerScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js';
+    scrollTriggerScript.async = true;
+
+    document.body.appendChild(gsapScript);
+    
+    gsapScript.onload = () => {
+      document.body.appendChild(scrollTriggerScript);
+      
+      scrollTriggerScript.onload = () => {
+        const { gsap } = window;
+        const { ScrollTrigger } = window;
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Scramble text animation for title
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+        let scrambleInterval;
+        
+        ScrollTrigger.create({
+          trigger: titleRef.current,
+          start: "top 80%",
+          end: "top 20%",
+          onEnter: () => {
+            let iteration = 0;
+            const maxIterations = 20;
+            
+            scrambleInterval = setInterval(() => {
+              setTitleText(
+                originalTitle
+                  .split("")
+                  .map((char, index) => {
+                    if (char === " ") return " ";
+                    if (index < iteration) return originalTitle[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                  })
+                  .join("")
+              );
+              
+              iteration += 1 / 3;
+              
+              if (iteration >= originalTitle.length) {
+                clearInterval(scrambleInterval);
+                setTitleText(originalTitle);
+              }
+            }, 50);
+          },
+          onLeaveBack: () => {
+            if (scrambleInterval) clearInterval(scrambleInterval);
+            setTitleText(originalTitle);
+          }
+        });
+
+        // Fade and slide animation for subtitle
+        gsap.fromTo(
+          subtitleRef.current,
+          {
+            opacity: 0,
+            y: 30,
+            scale: 0.95,
+            filter: "blur(10px)"
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            filter: "blur(0px)",
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: subtitleRef.current,
+              start: "top 85%",
+              end: "top 40%",
+              scrub: 1,
+            }
+          }
+        );
+      };
+    };
+
+    return () => {
+      if (document.body.contains(gsapScript)) {
+        document.body.removeChild(gsapScript);
+      }
+      if (document.body.contains(scrollTriggerScript)) {
+        document.body.removeChild(scrollTriggerScript);
+      }
+    };
+  }, []);
 
   const handleStartTest = () => {
     setTestStarted(true);
@@ -248,27 +348,31 @@ const MentalHealthTest = () => {
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center relative text-white overflow-hidden p-2">
       <div className="absolute h-full w-[96vw] rr tt10 rrCenter flex flex-col justify-center items-center overflow-hidden">
-        {/* Adjusted max-w-4xl to max-w-2xl and added p-2 for slightly smaller margins */}
         <div className="w-full max-w-2xl mx-auto p-2 h-full flex flex-col justify-center overflow-y-auto">
-          {/* Section Header - Compact */}
+          {/* Section Header with Animations */}
           <div className="text-center mb-3">
-            <h2 className="text-3xl font-bold text-white mb-1">
-              Mental Health Assessment
+            <h2 
+              ref={titleRef}
+              className="text-4xl font-bold text-white mb-1 tracking-wide"
+              style={{ fontFamily: 'monospace' }}
+            >
+              {titleText}
             </h2>
-            <p className="text-lg text-white max-w-xl mx-auto">
+            <p 
+              ref={subtitleRef}
+              className="text-lg text-white max-w-xl mx-auto"
+            >
               Take our scientifically-validated mental health screening to
               better understand your wellbeing
             </p>
           </div>
 
-          {/* Content Area - Compact - Reduced p-4 lg:p-5 to p-3 lg:p-4 */}
+          {/* Content Area */}
           <div className="bg-white rounded-xl shadow-lg p-3 lg:p-4 overflow-hidden">
-            {/* Initial State - Compact */}
+            {/* Initial State */}
             {!testStarted && !results && (
               <div>
                 <div className="grid lg:grid-cols-2 gap-3 mb-3">
-                  {" "}
-                  {/* Reduced gap-4 to gap-3, mb-4 to mb-3 */}
                   <div className="space-y-3">
                     <div className="flex items-start space-x-2">
                       <div className="bg-blue-100 p-1.5 rounded-lg">
@@ -316,8 +420,6 @@ const MentalHealthTest = () => {
                     </div>
                   </div>
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-3 rounded-lg">
-                    {" "}
-                    {/* Reduced p-4 to p-3 */}
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
                       Ready to Begin?
                     </h3>
@@ -327,7 +429,7 @@ const MentalHealthTest = () => {
                     </p>
                     <button
                       onClick={handleStartTest}
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg text-base font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-md flex items-center justify-center space-x-2" // Reduced px-5 py-2.5 to px-4 py-2
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg text-base font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-md flex items-center justify-center space-x-2"
                     >
                       <Play className="h-4 w-4" />
                       <span>Start Assessment</span>
@@ -357,13 +459,10 @@ const MentalHealthTest = () => {
               </div>
             )}
 
-            {/* Loading State - Compact */}
+            {/* Loading State */}
             {isLoading && (
               <div className="text-center py-6">
-                {" "}
-                {/* Reduced py-8 to py-6 */}
-                <Clock className="h-8 w-8 text-blue-500 mx-auto mb-3 animate-spin" />{" "}
-                {/* Reduced h-10 w-10 to h-8 w-8 */}
+                <Clock className="h-8 w-8 text-blue-500 mx-auto mb-3 animate-spin" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Analyzing Your Responses
                 </h3>
@@ -371,23 +470,16 @@ const MentalHealthTest = () => {
                   Using validated clinical assessment tools...
                 </p>
                 <div className="w-full max-w-sm mx-auto bg-gray-200 rounded-full h-2">
-                  {" "}
-                  {/* Reduced max-w-md to max-w-sm */}
                   <div className="bg-blue-600 h-2 rounded-full animate-pulse w-3/4"></div>
                 </div>
               </div>
             )}
 
-            {/* Question State - Compact */}
+            {/* Question State */}
             {testStarted && !isLoading && !results && currentQuestion && (
               <div>
-                {/* Progress Bar - Compact */}
                 <div className="mb-3">
-                  {" "}
-                  {/* Reduced mb-4 to mb-3 */}
                   <div className="flex justify-between items-center mb-1">
-                    {" "}
-                    {/* Reduced mb-2 to mb-1 */}
                     <span className="text-base font-semibold text-gray-700">
                       Question {currentQuestionIndex + 1} of{" "}
                       {validatedQuestions.length}
@@ -397,8 +489,6 @@ const MentalHealthTest = () => {
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    {" "}
-                    {/* Reduced h-2 to h-1.5 */}
                     <div
                       className="bg-gradient-to-r from-blue-600 to-purple-600 h-1.5 rounded-full transition-all duration-500"
                       style={{ width: `${getProgressPercentage()}%` }}
@@ -406,42 +496,29 @@ const MentalHealthTest = () => {
                   </div>
                 </div>
 
-                {/* Question - Compact - REDUCED PADDING/MARGIN */}
                 <div className="mb-2">
-                  {" "}
-                  {/* Reduced mb-3 to mb-2 */}
                   <div className="bg-blue-50 p-2 sm:p-3 rounded-lg mb-1">
-                    {" "}
-                    {/* Reduced p-3 to p-2 for small screens, mb-2 to mb-1 */}
                     <p className="text-xs text-blue-600 font-medium mb-0.5">
                       {currentQuestion.scale} •{" "}
                       {currentQuestion.clinicalSignificance}
                     </p>
                     <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-0.5">
-                      {" "}
-                      {/* Reduced font size for small screens */}
                       Over the last 2 weeks, how often have you been bothered
                       by:
                     </h3>
                   </div>
                   <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-2 sm:p-3 rounded-lg mb-2">
-                    {" "}
-                    {/* Reduced p-3 to p-2 for small screens, mb-3 to mb-2 */}
                     <p className="text-base text-gray-800 leading-relaxed font-medium">
                       {currentQuestion.text}
                     </p>
                   </div>
                 </div>
 
-                {/* Response Options - Compact - REDUCED PADDING/SPACING */}
                 <div className="space-y-1 mb-3">
-                  {" "}
-                  {/* Reduced space-y-2 to space-y-1, mb-4 to mb-3 */}
                   {scaleOptions.map((option) => (
                     <label
                       key={option.value}
                       className={`flex items-center p-2 border-2 rounded-lg cursor-pointer transition-all hover:shadow-sm ${
-                        // Reduced p-2.5 to p-2
                         responses[currentQuestion.id] === option.value
                           ? "border-blue-500 bg-blue-50 ring-2 ring-blue-100"
                           : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
@@ -455,17 +532,13 @@ const MentalHealthTest = () => {
                         onChange={() =>
                           handleResponse(currentQuestion.id, option.value)
                         }
-                        className="mr-2 h-3.5 w-3.5 text-blue-600" // Reduced h-4 w-4 to h-3.5 w-3.5, mr-3 to mr-2
+                        className="mr-2 h-3.5 w-3.5 text-blue-600"
                       />
                       <div className="flex-1">
                         <div className="font-semibold text-gray-900 text-sm sm:text-base mb-0">
-                          {" "}
-                          {/* Reduced font size for small screens, mb-0.5 to mb-0 */}
                           {option.label}
                         </div>
                         <div className="text-gray-600 text-xs sm:text-sm">
-                          {" "}
-                          {/* Reduced font size for small screens */}
                           {option.description}
                         </div>
                       </div>
@@ -473,20 +546,17 @@ const MentalHealthTest = () => {
                   ))}
                 </div>
 
-                {/* Navigation - Compact - REDUCED PADDING */}
                 <div className="flex justify-between">
                   <button
                     onClick={previousQuestion}
                     disabled={isFirstQuestion}
                     className={`flex items-center px-3 py-1.5 rounded-lg font-semibold text-sm sm:text-base transition-all ${
-                      // Reduced px-4 py-2 to px-3 py-1.5, reduced text size
                       isFirstQuestion
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-sm"
                     }`}
                   >
-                    <ArrowLeft className="h-4 w-4 mr-1.5" />{" "}
-                    {/* Reduced mr-2 to mr-1.5 */}
+                    <ArrowLeft className="h-4 w-4 mr-1.5" />
                     Previous
                   </button>
 
@@ -494,7 +564,6 @@ const MentalHealthTest = () => {
                     onClick={nextQuestion}
                     disabled={!hasAnsweredCurrent}
                     className={`flex items-center px-3 py-1.5 rounded-lg font-semibold text-sm sm:text-base transition-all ${
-                      // Reduced px-4 py-2 to px-3 py-1.5, reduced text size
                       !hasAnsweredCurrent
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                         : isLastQuestion
@@ -503,21 +572,17 @@ const MentalHealthTest = () => {
                     }`}
                   >
                     {isLastQuestion ? "Get Results" : "Next Question"}
-                    <ArrowRight className="h-4 w-4 ml-1.5" />{" "}
-                    {/* Reduced ml-2 to ml-1.5 */}
+                    <ArrowRight className="h-4 w-4 ml-1.5" />
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Results State - Compact */}
+            {/* Results State */}
             {results && (
               <div>
                 <div className="text-center mb-3">
-                  {" "}
-                  {/* Reduced mb-4 to mb-3 */}
-                  <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />{" "}
-                  {/* Reduced h-10 w-10 to h-8 w-8 and mb-3 to mb-2 */}
+                  <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
                   <h3 className="text-2xl font-bold text-gray-900 mb-1">
                     Your Assessment Results
                   </h3>
@@ -526,10 +591,7 @@ const MentalHealthTest = () => {
                   </p>
                 </div>
 
-                {/* Overall Assessment - Compact */}
                 <div className="bg-blue-50 p-3 rounded-lg mb-3">
-                  {" "}
-                  {/* Reduced p-4 to p-3 and mb-4 to mb-3 */}
                   <div className="flex items-start space-x-2">
                     <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
@@ -543,31 +605,24 @@ const MentalHealthTest = () => {
                   </div>
                 </div>
 
-                {/* Results - Compact */}
                 {results.disorders.length > 0 ? (
                   <div className="space-y-3 mb-3">
-                    {" "}
-                    {/* Reduced mb-4 to mb-3 */}
                     <h4 className="text-xl font-bold text-gray-900 mb-2">
                       Detailed Results
-                    </h4>{" "}
-                    {/* Reduced mb-3 to mb-2 */}
+                    </h4>
                     {results.disorders.map((disorder, index) => (
                       <div
                         key={disorder.disorder}
                         className="border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow"
                       >
                         <div className="flex justify-between items-start mb-1">
-                          {" "}
-                          {/* Reduced mb-2 to mb-1 */}
                           <div className="flex-1">
                             <h5 className="text-lg font-semibold text-gray-900 mb-0.5">
                               {disorder.info.name}
                             </h5>
                             <p className="text-gray-600 mb-1 text-sm">
                               {disorder.info.description}
-                            </p>{" "}
-                            {/* Reduced mb-1.5 to mb-1 */}
+                            </p>
                             <div className="flex flex-wrap gap-2 text-xs text-gray-500">
                               <span>{disorder.evidenceBase}</span>
                               <span>Prevalence: {disorder.prevalence}</span>
@@ -576,7 +631,6 @@ const MentalHealthTest = () => {
                           <div className="text-right ml-2">
                             <span
                               className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                                // Reduced px-2.5 to px-2
                                 disorder.riskLevel === "high"
                                   ? "bg-red-100 text-red-800"
                                   : disorder.riskLevel === "medium"
@@ -593,8 +647,6 @@ const MentalHealthTest = () => {
                   </div>
                 ) : (
                   <div className="bg-green-50 p-3 rounded-lg mb-3">
-                    {" "}
-                    {/* Reduced p-4 to p-3 and mb-4 to mb-3 */}
                     <div className="flex items-center space-x-2">
                       <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
                       <div>
@@ -610,17 +662,16 @@ const MentalHealthTest = () => {
                   </div>
                 )}
 
-                {/* Action Buttons - Compact */}
                 <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     onClick={resetTest}
-                    className="flex-1 py-2 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-base font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105" // Reduced py-2.5 to py-2
+                    className="flex-1 py-2 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-base font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105"
                   >
                     Take Assessment Again
                   </button>
                   <button
                     onClick={() => window.print()}
-                    className="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-lg text-base font-semibold hover:bg-gray-300 transition-colors" // Reduced py-2.5 to py-2
+                    className="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-lg text-base font-semibold hover:bg-gray-300 transition-colors"
                   >
                     Print Results
                   </button>

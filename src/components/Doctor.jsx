@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Card, CardBody } from "./Card";
 import {
   Search,
@@ -11,10 +11,34 @@ import {
   Users,
 } from "lucide-react";
 
+// The array of words to cycle through for the title animation
+const ROTATING_WORDS = [
+  "Professional",
+  "Specialist",
+  "Expert",
+  "Consultant",
+  "Therapist",
+];
+
 const Doctor = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
   const [sortBy, setSortBy] = useState("name");
+  // State for the rotating word animation
+  const [rotatingWordIndex, setRotatingWordIndex] = useState(0);
+
+  // Effect to handle the word rotation animation
+  useEffect(() => {
+    // Set an interval to change the word every 2.5 seconds (2500ms)
+    const intervalId = setInterval(() => {
+      setRotatingWordIndex(
+        (prevIndex) => (prevIndex + 1) % ROTATING_WORDS.length
+      );
+    }, 2500); // Change word every 2.5 seconds
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
 
   // Mock data for doctors - replace with actual API data
   const doctors = [
@@ -86,7 +110,7 @@ const Doctor = () => {
       phone: "+91 98200 54321",
       address: "10, HSR Layout, Sector 6, Bangalore, Karnataka 560102",
       photo:
-        "https://plus.unsplash.com/premium_photo-1691030256091-8d3733f8b6d3?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://plus.unsplash.com/premium-photo-1691030256091-8d3733f8b6d3?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       rating: 4.8,
       experience: "10 years",
       patients: 380,
@@ -169,7 +193,10 @@ const Doctor = () => {
           {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-              Find Your Mental Health Professional
+              Find Your Mental Health{" "}
+              <span key={rotatingWordIndex} className="animate-fade-scale-in animated-gradient-text">
+                {ROTATING_WORDS[rotatingWordIndex]}
+              </span>
             </h1>
             <p className="text-lg text-black max-w-2xl mx-auto">
               Connect with experienced doctors and therapists who care about
@@ -224,7 +251,7 @@ const Doctor = () => {
           </Card>
 
           {/* Results Count */}
-          <div className="text-center text-gray-600 dark:text-gray-300 mb-6">
+          <div className="text-center text-black font-semibold mb-6">
             Found {filteredDoctors.length} mental health professional
             {filteredDoctors.length !== 1 ? "s" : ""}
           </div>

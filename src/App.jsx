@@ -12,26 +12,44 @@ import Hero from "./components/Hero";
 import Chatbot from "./components/Chatbot";
 import LoginPage from "./components/Loginpage";
 import RegisterPage from "./components/Register";
-import CrisisSupport from "./components/CrisisSupport"; // Crisis Support is often critical
+import CrisisSupport from "./components/CrisisSupport";
 
 // ====================================================================
-// 2. LAZY LOADED COMPONENTS (Dynamic Import - Load on demand/in background)
-// These components form the bulk of your landing page sections.
+// 2. LAZY LOADED COMPONENTS WITH PRELOAD HINTS
+// Optimized lazy loading with webpackPreload for better performance
 // ====================================================================
-const LazyServices = lazy(() => import("./components/Services"));
-const LazyMoodTracker = lazy(() => import("./components/MoodTracker"));
-const LazyMentalHealthTest = lazy(() =>
-  import("./components/MentalHealthTest")
+const LazyServices = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/Services")
 );
-const LazyPrice = lazy(() => import("./components/Price"));
-const LazyDoctor = lazy(() => import("./components/Doctor"));
-const LazyFeatures = lazy(() => import("./components/Features"));
-const LazyTestimonial = lazy(() => import("./components/Testimonial"));
-const LazyFAQ = lazy(() => import("./components/FAQ"));
-const LazyAbout = lazy(() => import("./components/About"));
-const LazyFooter = lazy(() => import("./components/Footer"));
+const LazyMoodTracker = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/MoodTracker")
+);
+const LazyMentalHealthTest = lazy(() =>
+  import(/* webpackPrefetch: true */ "./components/MentalHealthTest")
+);
+const LazyPrice = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/Price")
+);
+const LazyDoctor = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/Doctor")
+);
+const LazyFeatures = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/Features")
+);
+const LazyTestimonial = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/Testimonial")
+);
+const LazyFAQ = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/FAQ")
+);
+const LazyAbout = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/About")
+);
+const LazyFooter = lazy(() => 
+  import(/* webpackPrefetch: true */ "./components/Footer")
+);
 
-// Loader Component (Unchanged)
+// Optimized Loader Component
 const Loader = () => {
   return (
     <div className="relative w-[65px] aspect-square">
@@ -78,7 +96,7 @@ const Loader = () => {
   );
 };
 
-// Loading Screen Component (Unchanged)
+// Loading Screen Component
 const LoadingScreen = () => {
   return (
     <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
@@ -90,17 +108,74 @@ const LoadingScreen = () => {
   );
 };
 
+// Minimal fallback for lazy sections
+const SectionFallback = () => (
+  <div className="min-h-[200px] flex items-center justify-center">
+    <div className="text-gray-400 text-sm">Loading...</div>
+  </div>
+);
+
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // MINIMUM DURATION: Reduced to 500ms (0.5s) for a smooth, fast transition
+    // Optimized loading duration
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Preload components after initial render for instant transitions
+  useEffect(() => {
+    if (!isLoading) {
+      // Small delay to ensure Hero is fully rendered first
+      const preloadTimer = setTimeout(() => {
+        // Trigger preload of first few sections
+        LazyServices.preload?.();
+        LazyMoodTracker.preload?.();
+        LazyMentalHealthTest.preload?.();
+      }, 100);
+
+      return () => clearTimeout(preloadTimer);
+    }
+  }, [isLoading]);
+
+  // Intersection Observer for progressive loading
+  useEffect(() => {
+    if (!isLoading && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const sectionId = entry.target.id;
+              // Preload next sections as user scrolls
+              if (sectionId === 'services') {
+                LazyPrice.preload?.();
+                LazyDoctor.preload?.();
+              } else if (sectionId === 'price') {
+                LazyFeatures.preload?.();
+                LazyTestimonial.preload?.();
+              } else if (sectionId === 'features') {
+                LazyFAQ.preload?.();
+                LazyAbout.preload?.();
+              } else if (sectionId === 'faq') {
+                LazyFooter.preload?.();
+              }
+            }
+          });
+        },
+        { rootMargin: '200px' } // Start loading 200px before section is visible
+      );
+
+      // Observe all sections
+      const sections = document.querySelectorAll('section[id]');
+      sections.forEach((section) => observer.observe(section));
+
+      return () => observer.disconnect();
+    }
+  }, [isLoading]);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -122,66 +197,71 @@ const App = () => {
                 <MiniNavbar />
                 <Navbar />
 
-                {/* CRITICAL SECTION: Hero is loaded immediately */}
+                {/* CRITICAL SECTION: Hero loads immediately */}
                 <section id="home">
                   <Hero />
                 </section>
 
-                {/* SUSPENSE BOUNDARY: Wraps all lazy-loaded sections. 
-                    This ensures the main page renders quickly, and the content 
-                    below the fold loads asynchronously. 
-                */}
-                <Suspense
-                  fallback={
-                    <div className="text-center p-16 text-gray-500">
-                      Loading further sections...
-                    </div>
-                  }
-                >
+                {/* Individual Suspense boundaries for better UX */}
+                <Suspense fallback={<SectionFallback />}>
                   <section id="services">
                     <LazyServices />
                   </section>
+                </Suspense>
 
+                <Suspense fallback={<SectionFallback />}>
                   <section id="moodtracker">
                     <LazyMoodTracker />
                   </section>
+                </Suspense>
 
+                <Suspense fallback={<SectionFallback />}>
                   <section id="mentalhealthtest">
                     <LazyMentalHealthTest />
                   </section>
+                </Suspense>
 
+                <Suspense fallback={<SectionFallback />}>
                   <section id="price">
                     <LazyPrice />
                   </section>
+                </Suspense>
 
+                <Suspense fallback={<SectionFallback />}>
                   <section id="doctor">
                     <LazyDoctor />
                   </section>
+                </Suspense>
 
+                <Suspense fallback={<SectionFallback />}>
                   <section id="features">
                     <LazyFeatures />
                   </section>
+                </Suspense>
 
-                  {/* <section id="Meditationhub">
-                    <MeditationHub />
-                  </section> */}
-
+                <Suspense fallback={<SectionFallback />}>
                   <section id="testimonial">
                     <LazyTestimonial />
                   </section>
+                </Suspense>
 
+                <Suspense fallback={<SectionFallback />}>
                   <section id="faq">
                     <LazyFAQ />
                   </section>
+                </Suspense>
 
-                  <section id="crisissupport">
-                    <CrisisSupport /> {/* Kept standard import for stability */}
-                  </section>
+                <section id="crisissupport">
+                  <CrisisSupport />
+                </section>
 
+                <Suspense fallback={<SectionFallback />}>
                   <section id="about">
                     <LazyAbout />
                   </section>
+                </Suspense>
 
+                <Suspense fallback={<SectionFallback />}>
                   <section id="footer">
                     <LazyFooter />
                   </section>
@@ -191,10 +271,13 @@ const App = () => {
           />
         </Routes>
 
-        {/* Chatbot is global — always available */}
+        {/* Chatbot is global â€" always available */}
         <Chatbot />
       </div>
     </Router>
+
+            
+
   );
 };
 

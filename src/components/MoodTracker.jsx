@@ -161,8 +161,33 @@ const MoodTracker = () => {
       className="space-y-6"
     >
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-white mb-2">How are you feeling today?</h2>
-        <p className="text-gray-300">Take a moment to check in with yourself</p>
+        <motion.h2 
+          className="text-4xl font-bold text-white mb-2"
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.8 }}
+          transition={{ 
+            duration: 0.8, 
+            ease: [0.6, -0.05, 0.01, 0.99],
+            type: "spring",
+            stiffness: 100
+          }}
+        >
+          How are you feeling today?
+        </motion.h2>
+        <motion.p 
+          className="text-gray-300"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.8 }}
+          transition={{ 
+            duration: 0.8, 
+            delay: 0.2,
+            ease: [0.6, -0.05, 0.01, 0.99]
+          }}
+        >
+          Take a moment to check in with yourself
+        </motion.p>
       </div>
 
       {/* Mood Selection */}
