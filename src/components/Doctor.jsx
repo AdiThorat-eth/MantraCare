@@ -264,7 +264,7 @@ const Doctor = () => {
     //    The entire Doctor.jsx component is unscrollable.
     <div className="h-screen w-screen flex flex-col justify-center items-center relative">
       {/* 2. Inner container to hold the content, now ensures its h-full (100vh) */}
-      <div className="absolute h-full w-[96vw] rr tt11 rrCenter flex flex-col justify-start items-center">
+      <div className="absolute h-full w-full max-w-[96vw] rr tt11 inset-x-0 mx-auto flex flex-col justify-start items-center overflow-x-hidden">
         <div className="w-full max-w-7xl mx-auto px-4 flex flex-col h-full">
           
           {/* 3. FIXED HEADER SECTION (Ref to calculate height) */}

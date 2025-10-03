@@ -95,7 +95,7 @@ export default function FaqPage() {
   return (
     // Reduced py-12 to py-4, reduced px-4 to px-2
     <div className="min-h-screen py-4 px-2 sm:px-4 lg:px-6 flex items-center justify-center relative overflow-hidden">
-      <div className="absolute h-[96vh] w-[96vw] rr tt8 rrCenter flex flex-col justify-center items-center">
+      <div className="absolute h-[96vh]  w-full max-w-[96vw] inset-x-0 mx-auto overflow-x-hidden rr tt8 flex flex-col justify-center items-center">
         {/* Reduced max-w-4xl to max-w-2xl, reduced space-y-6 to space-y-3, reduced px-4 to px-2 */}
         <div className="max-w-2xl w-full space-y-3 relative z-10 px-2">
           {/* Header */}

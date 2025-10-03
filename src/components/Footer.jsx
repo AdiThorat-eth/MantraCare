@@ -40,7 +40,7 @@ const Footer = memo(() => {
 
   return (
     <div className="relative w-screen h-[60vh] overflow-x-hidden flex flex-col justify-end">
-      <footer className="relative tt5 bg-red-200 overflow-hidden rrr rrCenter w-[96vw] text-gray-900 flex bottom-0">
+      <footer className="relative tt5 bg-red-200 overflow-hidden rrr text-gray-900 flex bottom-0 w-full max-w-[96vw] inset-x-0 mx-auto overflow-x-hidden">
         {/* Enhanced animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-500/20 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -152,7 +152,7 @@ const Footer = memo(() => {
             </div>
           </div>
           {/* Bottom section */}
-          <div className="border-t border-gray-600/50 relative">
+          <div className="border-t border-gray-600/50 pt-8 relative">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 relative z-10">
               <div className="flex items-center space-x-2 text-gray-800 text-sm group hover:scale-105 transition-transform duration-300">
@@ -267,7 +267,7 @@ const Footer = memo(() => {
         {/* Scroll to top button - Repositioned to avoid chatbot overlap */}
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 left-8 p-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 z-50 hover:rotate-12"
+          className="fixed bottom-8 left-8 p-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 z-50 hover:rotate-12 absolute"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >

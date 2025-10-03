@@ -6,7 +6,7 @@
 
 body {
   font-family: "circular", sans-serif;
-  width: 100dvw;
+  /* width: 100dvw; */
   background-color: #fff;
   overflow-x: hidden;
 }
@@ -47,6 +47,7 @@ body {
 /* Smooth scrolling for the entire page */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 @layer base {

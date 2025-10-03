@@ -348,7 +348,8 @@ const MentalHealthTest = () => {
 
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center relative text-white overflow-hidden p-2">
-      <div className="absolute h-full w-[96vw] rr tt10 rrCenter flex flex-col justify-center items-center overflow-hidden">
+      {/* Main Content Wrapper - Centering fix applied here */}
+      <div className="absolute h-full w-full max-w-[96vw] rr tt10 inset-x-0 mx-auto flex flex-col justify-center items-center overflow-hidden overflow-x-hidden">
         <div className="w-full max-w-2xl mx-auto p-2 h-full flex flex-col justify-center overflow-y-auto">
           {/* Section Header with Animations */}
           <div className="text-center mb-3">

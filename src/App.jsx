@@ -13,6 +13,7 @@ import Chatbot from "./components/Chatbot";
 import LoginPage from "./components/Loginpage";
 import RegisterPage from "./components/Register";
 import CrisisSupport from "./components/CrisisSupport";
+// import White from "./components/White";
 
 // ====================================================================
 // 2. LAZY LOADED COMPONENTS WITH PRELOAD HINTS
@@ -48,6 +49,10 @@ const LazyAbout = lazy(() =>
 const LazyFooter = lazy(() => 
   import(/* webpackPrefetch: true */ "./components/Footer")
 );
+
+// const LazyWhite = lazy(() => 
+// import(/* webpackPrefetch: true */ "./components/White")
+// );
 
 // Optimized Loader Component
 const Loader = () => {
@@ -261,11 +266,18 @@ const App = () => {
                   </section>
                 </Suspense>
 
+                {/* <Suspense fallback={<SectionFallback />}>
+                  <section id="white">
+                    <LazyWhite />
+                  </section>
+                </Suspense> */}
+
                 <Suspense fallback={<SectionFallback />}>
                   <section id="footer">
                     <LazyFooter />
                   </section>
                 </Suspense>
+
               </>
             }
           />

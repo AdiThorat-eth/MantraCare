@@ -313,7 +313,7 @@ const Services = () => {
           perspective: 1000px;
         }
       `}</style>
-      <div className="absolute h-screen w-[96vw] rr bc rrCenter flex flex-col justify-center items-center overflow-hidden">
+      <div className="absolute h-screen w-full max-w-[96vw] rr bc inset-x-0 mx-auto flex flex-col justify-center items-center overflow-hidden overflow-x-hidden">
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 max-w-7xl">
           {/* Services Title - Compact */}
           <div className="text-center mb-3 sm:mb-4 md:mb-5">

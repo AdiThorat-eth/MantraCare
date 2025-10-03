@@ -370,13 +370,13 @@ const Features = () => {
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center relative text-white">
       {/* Background glow */}
-      <div className="fixed inset-0 pointer-events-none">
+      {/* <div className="fixed inset-0 pointer-events-none">
         <div className="absolute -top-10 -left-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
         <div className="absolute top-20 -right-10 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-      </div>
+      </div> */}
 
-      <div className="absolute h-[96vh] w-[96vw] rr bc rrCenter flex flex-col justify-center items-center overflow-y-hidden">
+      <div className="absolute h-[96vh] w-full max-w-[96vw] inset-x-0 mx-auto overflow-x-hidden rr bc flex flex-col justify-center items-center overflow-y-hidden">
         <div className="relative z-10 w-full h-full flex flex-col justify-center items-center px-4">
           {/* Header - Compact */}
           <header className="text-center mb-6 flex-shrink-0" ref={headerRef}>

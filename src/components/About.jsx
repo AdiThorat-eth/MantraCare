@@ -98,7 +98,7 @@ const About = () => {
         }
       `}</style>
 
-      <div className="absolute h-[96vh] w-[96vw] rr tt6 rrCenter flex flex-col justify-center items-center overflow-y-auto">
+      <div className="absolute h-[96vh]  w-full max-w-[96vw] inset-x-0 mx-auto overflow-x-hidden rr tt6 flex flex-col justify-center items-center overflow-y-auto">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div
