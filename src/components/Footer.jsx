@@ -103,8 +103,8 @@ const Footer = memo(() => {
                 </div>
               </div>
             </div>
-            {/* Quick Links */}
-            <div className="space-y-4 transform hover:scale-105 transition-all duration-500 group">
+            {/* Quick Links - MODIFIED to be hidden by default and visible only on large (lg) screens */}
+            <div className="space-y-4 transform hover:scale-105 transition-all duration-500 group hidden lg:block">
               <h4 className="text-lg font-semibold text-gray-900 mb-4 relative group-hover:text-purple-800 transition-colors duration-300">
                 Quick Links
                 <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full group-hover:w-full transition-all duration-500"></div>
@@ -128,7 +128,7 @@ const Footer = memo(() => {
               </ul>
             </div>
             {/* Services */}
-            <div className="space-y-4 transform hover:scale-105 transition-all duration-500 group">
+            <div className="space-y-4 transform hover:scale-105 transition-all duration-500 group hidden lg:block">
               <h4 className="text-lg font-semibold text-gray-900 mb-4 relative group-hover:text-pink-800 transition-colors duration-300">
                 Our Services
                 <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full group-hover:w-full transition-all duration-500"></div>
@@ -166,7 +166,7 @@ const Footer = memo(() => {
               <div className="text-gray-800 text-sm hover:text-black transition-colors duration-300 hover:scale-105 transform">
                 © {new Date().getFullYear()} Mantra Care. All rights reserved.
               </div>
-              <div className="flex space-x-6 text-sm">
+              <div className="flex space-x-6 text-sm hidden lg:block">
                 <a
                   href="#"
                   className="text-gray-800 hover:text-black transition-all duration-300 transform hover:scale-110 hover:rotate-1 relative group"
