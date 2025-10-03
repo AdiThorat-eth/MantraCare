@@ -52,7 +52,7 @@ const Testimonial = () => {
     <div className="h-screen w-screen flex flex-col justify-center items-center relative">
       {/* Section Header */}
       <div className="absolute h-[100vh]  w-full max-w-[96vw] inset-x-0 mx-auto overflow-x-hidden rr tt2 flex flex-col justify-center items-center overflow-y-auto">
-        <div className="text-center mb-4 mt-10">
+        <div className="text-center mb-4 mt-10 relative"> {/* Added 'relative' here */}
           <h2 className="text-5xl font-bold mb-4">Testimonials</h2>
           <p className="special-font text-xl max-w-2xl mx-auto opacity-70">
             We believe in{" "}
@@ -60,6 +60,23 @@ const Testimonial = () => {
               <ss>quality</ss>
             </b>
           </p>
+          {/* SVG for incircle animation added here, positioned absolutely relative to its parent div */}
+          <svg
+            viewBox="0 0 322.8125 59.3125"
+            style={{ transform: "scale(-1, 1)" }}
+            className="absolute top-0"
+          >
+            <ellipse
+              cx="161.40625"
+              cy="29.65625"
+              rx="159.40625"
+              ry="27.65625"
+              fill="none"
+              stroke="#d0ff14ff" // neon green
+              strokeWidth="3"
+              className="animate-circle"
+            />
+          </svg>
         </div>
 
         {/* Reviews Component */}

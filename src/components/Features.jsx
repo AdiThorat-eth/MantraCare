@@ -383,15 +383,15 @@ const Features = () => {
             {/* **********************************************
             UPDATED H1 WITH MOTION AND VARIANTS
             ********************************************** */}
-            <motion.h1
-              className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.8 }} // Triggers when 80% of element is visible
-              variants={headerVariants}
-            >
-              Mental Health Resources
-            </motion.h1>
+           <motion.h1
+  className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent"
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.8 }} // Triggers when 80% of element is visible
+  variants={headerVariants}
+>
+<div className="text-4xl yoyo font-changing-animation">Mental Health Resources</div>
+</motion.h1>
             <p className="text-sm text-gray-300 max-w-xl mx-auto">
               Explore yoga, meditation, videos, and audio resources.
             </p>

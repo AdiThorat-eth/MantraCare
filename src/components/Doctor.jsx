@@ -285,7 +285,7 @@ const Doctor = () => {
             </div>
 
                  {/* Search and Filter Section - Sticky Search Bar */}
-                 <Card className="mb-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+                 <Card className="mb-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
               <CardBody className="p-6">
                 <div className="flex flex-col lg:flex-row gap-4 items-center">
                   {/* Search Bar */}
@@ -301,7 +301,7 @@ const Doctor = () => {
                   </div>
 
                   {/* Specialty Filter */}
-                  <div className="flex items-center gap-2 w-full lg:w-auto">
+                  <div className="flex items-center gap-4 w-full lg:w-auto">
                     <Filter className="w-5 h-5 text-gray-500" />
                     <select
                       value={selectedSpecialty}

@@ -394,4 +394,70 @@ html {
     font-family: "circular";
     font-weight: bold;
   }
+
+  @keyframes circleLoop {
+    0% {
+      stroke-dasharray: 0, 1000; /* invisible */
+    }
+    40% {
+      stroke-dasharray: 1000, 1000; /* fully drawn */
+    }
+    60% {
+      stroke-dasharray: 1000, 1000; /* hold circle */
+    }
+    100% {
+      stroke-dasharray: 0, 1000; /* vanish */
+    }
+  }
+  
+  .animate-circle {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    animation: circleLoop 4s ease-in-out infinite;
+  }
+  
+  /* Keyframes for Font, Style, and Color Changing Animation */
+  @keyframes font-change {
+    0% { 
+      font-family: "Circular", sans-serif; 
+      font-weight: normal; 
+      -webkit-text-fill-color: #8b5cf6; /* purple */
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2); 
+    }
+    25% { 
+      font-family: "False", sans-serif; 
+      font-weight: bold; 
+      -webkit-text-fill-color: #10b981; /* emerald */
+      -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+    }
+    50% { 
+      font-family: "Justus", sans-serif; 
+      font-weight: bold; 
+      -webkit-text-fill-color: #3b82f6; /* blue */
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    }
+    75% { 
+      font-family: "SilkSerif", sans-serif; 
+      font-weight: normal; 
+      -webkit-text-fill-color: #f97316; /* orange */
+      -webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
+    }
+    100% { 
+      font-family: "Circular", sans-serif; 
+      font-weight: normal; 
+      -webkit-text-fill-color: #8b5cf6; /* purple */
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  /* Apply Font Changing Animation */
+  .font-changing-animation {
+    /* Use 'initial' and 'whileInView' on the motion.h1 element to control the start */
+    animation: font-change 3s infinite alternate ease-in-out; 
+    /* The h1 already has this gradient background, but we need to ensure -webkit-text-fill-color is respected */
+    background: none; 
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    text-fill-color: initial;
+  }
 }

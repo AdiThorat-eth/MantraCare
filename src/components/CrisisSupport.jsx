@@ -61,8 +61,26 @@ const CrisisSupport = () => {
               className="space-y-6 max-w-2xl w-full"
             >
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-white mb-2">Crisis Support</h2>
-                <p className="text-gray-300">You're not alone. Help is available.</p>
+                {/* Applying the unique glowing animation here:
+                  1. Used motion.h2 for Framer Motion animation.
+                  2. Added a faint text-shadow (text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 100, 100, 0.5); for a glow).
+                  3. Used the 'animate' prop with a 'repeat' and 'yoyo' to create a subtle pulsing glow animation.
+                */}
+                <motion.h2 
+                  className="text-5xl font-bold text-white mb-2"
+                  initial={{ textShadow: "0 0 5px rgba(255, 255, 255, 0.5)" }}
+                  animate={{ 
+                    textShadow: [
+                      "0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 100, 100, 0.5)",
+                      "0 0 5px rgba(255, 255, 255, 0.5), 0 0 15px rgba(255, 100, 100, 0.3)",
+                      "0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 100, 100, 0.5)"
+                    ]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  Crisis Support
+                </motion.h2>
+                <p className="text-white">You're not alone. Help is available.</p>
               </div>
 
               {/* Emergency Contacts */}

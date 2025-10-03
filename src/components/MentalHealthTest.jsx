@@ -450,10 +450,7 @@ const MentalHealthTest = () => {
                         Important Notice
                       </h4>
                       <p className="text-yellow-700 text-xs leading-relaxed">
-                        This screening tool is for educational purposes and is
-                        not a substitute for professional medical advice. If
-                        you're experiencing a mental health crisis, please
-                        contact emergency services immediately.
+                      The screening tool is for educational purposes only and is not a substitute for professional medical advice.
                       </p>
                     </div>
                   </div>
