@@ -11,7 +11,7 @@ export default function Hero() {
         MANTRA
       </h1> */}
 
-      <p className="text-lg md:text-xl text-center text-white mix-blend-exclusion max-w-2xl leading-relaxed">
+      <p className="text-lg md:text-xl text-center text-white max-w-2xl leading-relaxed drop-shadow-lg">
         Your trusted companion on the journey to better mental health. Explore
         personalized guidance, and a safe space to grow emotionally and
         mentally.
