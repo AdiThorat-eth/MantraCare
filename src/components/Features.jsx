@@ -93,7 +93,7 @@ const Features = () => {
           id: "pdf-1",
           title: "Yoga & Meditation Information",
           description:
-            "Explore trusted online resources about yoga postures, meditation techniques, and their benefits. Click to visit the official sites for more information.",
+            "Explore trusted online resources about yoga postures, meditation techniques, and their benefits.",
           icon: "📄",
           color: "cyan",
           type: "pdfs",
@@ -504,7 +504,7 @@ const ResourceCard = ({ section, onOpen }) => {
         </p>
 
         {items?.length > 0 && (
-          <ul className="space-y-0.5 mb-3">
+          <ul className="space-y-0.5 mb-3 hidden lg:block">
             {items.slice(0, 2).map((it) => (
               <li
                 key={it.id}

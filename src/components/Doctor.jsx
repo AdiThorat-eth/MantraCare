@@ -268,7 +268,7 @@ const Doctor = () => {
         <div className="w-full max-w-7xl mx-auto px-4 flex flex-col h-full">
           
           {/* 3. FIXED HEADER SECTION (Ref to calculate height) */}
-          <div ref={headerRef} className="pt-6 pb-4">
+          <div ref={headerRef} className="pt-6 pb-2">
             
             {/* Title */}
             <div className="text-center mb-6">
@@ -331,7 +331,7 @@ const Doctor = () => {
             </Card>
 
             {/* Results Count */}
-            <div className="text-center text-black font-semibold mb-6">
+            <div className="text-center text-black font-semibold mb-2">
               Found {filteredDoctors.length} mental health professional
               {filteredDoctors.length !== 1 ? "s" : ""}
             </div>
