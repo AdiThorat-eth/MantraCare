@@ -2,7 +2,7 @@ import { LavaLamp } from "./AnimatedBack";
 
 export default function Hero() {
   return (
-    <div className="h-screen w-screen flex flex-col justify-center items-center relative">
+    <div className="h-screen w-screen flex flex-col justify-center items-center relative z-0">
       <LavaLamp />
       <h1 className="text-6xl md:text-8xl font-false tracking-tight mix-blend-exclusion whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 hover:from-green-400 hover:to-lime-500 transition-all duration-700 ease-in-out">
         MANTRA
@@ -11,7 +11,7 @@ export default function Hero() {
         MANTRA
       </h1> */}
 
-      <p className="text-lg md:text-xl text-center text-white max-w-2xl leading-relaxed drop-shadow-lg">
+      <p className="text-lg md:text-xl text-center text-white mix-blend-exclusion max-w-2xl leading-relaxed relative z-10">
         Your trusted companion on the journey to better mental health. Explore
         personalized guidance, and a safe space to grow emotionally and
         mentally.
