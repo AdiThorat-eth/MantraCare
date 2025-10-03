@@ -67,7 +67,8 @@ const MentalHealthTest = () => {
                   .join("")
               );
               
-              iteration += 1 / 3;
+              // **CHANGE MADE HERE: Increased iteration increment from 1/3 to 1 for faster reveal**
+              iteration += 1; 
               
               if (iteration >= originalTitle.length) {
                 clearInterval(scrambleInterval);

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Card, CardBody } from "./Card";
 import {
   Search,
@@ -26,6 +26,10 @@ const Doctor = () => {
   const [sortBy, setSortBy] = useState("name");
   // State for the rotating word animation
   const [rotatingWordIndex, setRotatingWordIndex] = useState(0);
+  // Ref for the sticky header to dynamically calculate heights
+  const headerRef = useRef(null);
+  // State for calculated scrollable area height
+  const [scrollableHeight, setScrollableHeight] = useState("0px");
 
   // Effect to handle the word rotation animation
   useEffect(() => {
@@ -40,7 +44,35 @@ const Doctor = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Mock data for doctors - replace with actual API data
+  // Effect to calculate the height of the scrollable content area
+  useEffect(() => {
+    const calculateHeight = () => {
+      if (headerRef.current) {
+        // Get the height of the entire fixed header block
+        const headerHeight = headerRef.current.offsetHeight;
+        
+        // Calculate the remaining height for the scrollable results area.
+        // The parent container is h-full, which is 100vh of the screen in this setup.
+        // We subtract the header height and a small margin/padding (e.g., 20px)
+        const newHeight = `calc(100vh - ${headerHeight}px - 20px)`;
+        setScrollableHeight(newHeight);
+      }
+    };
+
+    // Calculate height on mount and window resize
+    calculateHeight();
+    window.addEventListener("resize", calculateHeight);
+    
+    // Recalculate after a slight delay to ensure card content renders
+    const timer = setTimeout(calculateHeight, 100);
+
+    return () => {
+      window.removeEventListener("resize", calculateHeight);
+      clearTimeout(timer);
+    };
+  }, [searchTerm, selectedSpecialty, sortBy]); // Recalculate if filters change
+
+  // Mock data for doctors - replacement data for demonstration
   const doctors = [
     {
       id: 1,
@@ -130,6 +162,48 @@ const Doctor = () => {
       patients: 290,
       specialties: ["Substance Abuse", "Behavioral Addiction", "Group Therapy"],
     },
+    {
+      id: 7,
+      name: "Dr. Kevin Li",
+      specialty: "Psychiatrist",
+      hospital: "Sanity Clinic",
+      phone: "+1 (555) 777-8888",
+      address: "99 Calm Street, City 12348",
+      photo:
+        "https://images.unsplash.com/photo-1603415526960-c3d0b2e8f17f?w=400&h=400&fit=crop&crop=face",
+      rating: 4.5,
+      experience: "7 years",
+      patients: 250,
+      specialties: ["Anxiety", "Sleep Disorders"],
+    },
+    {
+      id: 8,
+      name: "Dr. Lisa White",
+      specialty: "Clinical Psychologist",
+      hospital: "Inner Peace Center",
+      phone: "+1 (555) 999-0000",
+      address: "50 Tranquil Ave, City 12349",
+      photo:
+        "https://images.unsplash.com/photo-1594918737225-b467b7e8d08f?w=400&h=400&fit=crop&crop=face",
+      rating: 4.9,
+      experience: "18 years",
+      patients: 700,
+      specialties: ["Grief Counseling", "OCD"],
+    },
+    {
+      id: 9,
+      name: "Dr. Ben Carter",
+      specialty: "Therapist",
+      hospital: "Counselling Hub",
+      phone: "+1 (555) 111-2222",
+      address: "88 Compassion Blvd, City 12350",
+      photo:
+        "https://images.unsplash.com/photo-1552058544-f2b7a9de58b1?w=400&h=400&fit=crop&crop=face",
+      rating: 4.6,
+      experience: "6 years",
+      patients: 180,
+      specialties: ["Stress Management", "Career Coaching"],
+    },
   ];
 
   const specialties = [
@@ -174,202 +248,224 @@ const Doctor = () => {
     switch (specialty) {
       case "Clinical Psychologist":
       case "Therapist":
-        return <Heart className="w-5 h-5 text-pink-500" />;
+        return <Heart className="w-4 h-4 text-pink-500" />; // Reduced icon size
       case "Psychiatrist":
       case "Neuropsychologist":
-        return <Brain className="w-5 h-5 text-purple-500" />;
+        return <Brain className="w-4 h-4 text-purple-500" />; // Reduced icon size
       case "Child Psychologist":
-        return <Users className="w-5 h-5 text-blue-500" />;
+        return <Users className="w-4 h-4 text-blue-500" />; // Reduced icon size
       default:
-        return <Heart className="w-5 h-5 text-green-500" />;
+        return <Heart className="w-4 h-4 text-green-500" />; // Reduced icon size
     }
   };
 
   return (
+    // 1. Outer container takes full viewport height and width. 
+    //    The entire Doctor.jsx component is unscrollable.
     <div className="h-screen w-screen flex flex-col justify-center items-center relative">
-      <div className="absolute h-[100vh] w-[96vw] rr tt11 rrCenter flex flex-col justify-start items-center overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        {/* Header Section */}
-        <div className="w-full max-w-7xl mx-auto px-4 py-6 space-y-6">
-          {/* Title */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-              Find Your Mental Health{" "}
-              <span key={rotatingWordIndex} className="animate-fade-scale-in animated-gradient-text">
-                {ROTATING_WORDS[rotatingWordIndex]}
-              </span>
-            </h1>
-            <p className="text-lg text-black max-w-2xl mx-auto">
-              Connect with experienced doctors and therapists who care about
-              your mental well-being
-            </p>
-          </div>
-
-          {/* Search and Filter Section */}
-          <Card className="mb-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-            <CardBody className="p-6">
-              <div className="flex flex-col lg:flex-row gap-4 items-center">
-                {/* Search Bar */}
-                <div className="relative flex-1 w-full lg:w-auto">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder="Search doctors, hospitals, or specialties..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  />
-                </div>
-
-                {/* Specialty Filter */}
-                <div className="flex items-center gap-2 w-full lg:w-auto">
-                  <Filter className="w-5 h-5 text-gray-500" />
-                  <select
-                    value={selectedSpecialty}
-                    onChange={(e) => setSelectedSpecialty(e.target.value)}
-                    className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[200px]"
-                  >
-                    {specialties.map((specialty) => (
-                      <option key={specialty} value={specialty}>
-                        {specialty === "all" ? "All Specialties" : specialty}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Sort By */}
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[150px]"
-                >
-                  <option value="name">Sort by Name</option>
-                  <option value="rating">Sort by Rating</option>
-                  <option value="experience">Sort by Experience</option>
-                </select>
-              </div>
-            </CardBody>
-          </Card>
-
-          {/* Results Count */}
-          <div className="text-center text-black font-semibold mb-6">
-            Found {filteredDoctors.length} mental health professional
-            {filteredDoctors.length !== 1 ? "s" : ""}
-          </div>
-
-          {/* Doctors Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-8">
-            {filteredDoctors.map((doctor) => (
-              <Card
-                key={doctor.id}
-                className="hover:scale-105 transition-all duration-300 cursor-pointer bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-white/20 shadow-lg hover:shadow-2xl"
-              >
-                <CardBody className="p-6">
-                  {/* Doctor Photo and Basic Info */}
-                  <div className="flex items-start space-x-4 mb-4">
-                    <div className="relative">
-                      <img
-                        src={doctor.photo}
-                        alt={doctor.name}
-                        className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg"
-                        onError={(e) => {
-                          e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                            doctor.name
-                          )}&size=64&background=6366f1&color=ffffff`;
-                        }}
-                      />
-                      <div className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-white"></div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 truncate">
-                        {doctor.name}
-                      </h3>
-                      <div className="flex items-center space-x-2 mb-2">
-                        {getSpecialtyIcon(doctor.specialty)}
-                        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                          {doctor.specialty}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
-                          {doctor.rating}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          ({doctor.patients} patients)
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Hospital Info */}
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
-                      {doctor.hospital}
-                    </h4>
-                    <div className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-300">
-                      <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                      <span className="leading-tight">{doctor.address}</span>
-                    </div>
-                  </div>
-
-                  {/* Specialties Tags */}
-                  <div className="mb-4">
-                    <div className="flex flex-wrap gap-1">
-                      {doctor.specialties.map((specialty, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full"
-                        >
-                          {specialty}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Experience & Contact */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-600">
-                    <div className="text-sm">
-                      <span className="text-gray-500 dark:text-gray-400">
-                        Experience:{" "}
-                      </span>
-                      <span className="font-medium text-gray-900 dark:text-white">
-                        {doctor.experience}
-                      </span>
-                    </div>
-                    <a
-                      href={`tel:${doctor.phone}`}
-                      className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm font-medium"
-                    >
-                      <Phone className="w-4 h-4" />
-                      <span className="hidden sm:inline">Call Now</span>
-                    </a>
-                  </div>
-
-                  {/* Phone Number */}
-                  <div className="mt-2 text-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      {doctor.phone}
-                    </span>
-                  </div>
-                </CardBody>
-              </Card>
-            ))}
-          </div>
-
-          {/* No Results */}
-          {filteredDoctors.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-gray-400 mb-4">
-                <Search className="w-16 h-16 mx-auto" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
-                No doctors found
-              </h3>
-              <p className="text-gray-500 dark:text-gray-400">
-                Try adjusting your search criteria or filters
+      {/* 2. Inner container to hold the content, now ensures its h-full (100vh) */}
+      <div className="absolute h-full w-[96vw] rr tt11 rrCenter flex flex-col justify-start items-center">
+        <div className="w-full max-w-7xl mx-auto px-4 flex flex-col h-full">
+          
+          {/* 3. FIXED HEADER SECTION (Ref to calculate height) */}
+          <div ref={headerRef} className="pt-6 pb-4">
+            
+            {/* Title */}
+            <div className="text-center mb-6">
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+                Find Your Mental Health{" "}
+                <span key={rotatingWordIndex} className="animate-fade-scale-in animated-gradient-text">
+                  {ROTATING_WORDS[rotatingWordIndex]}
+                </span>
+              </h1>
+              <p className="text-lg text-black max-w-2xl mx-auto">
+                Connect with experienced doctors and therapists who care about
+                your mental well-being
               </p>
             </div>
-          )}
+
+                 {/* Search and Filter Section - Sticky Search Bar */}
+                 <Card className="mb-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+              <CardBody className="p-6">
+                <div className="flex flex-col lg:flex-row gap-4 items-center">
+                  {/* Search Bar */}
+                  <div className="relative flex-1 w-full lg:w-auto">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      type="text"
+                      placeholder="Search doctors, hospitals, or specialties..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    />
+                  </div>
+
+                  {/* Specialty Filter */}
+                  <div className="flex items-center gap-2 w-full lg:w-auto">
+                    <Filter className="w-5 h-5 text-gray-500" />
+                    <select
+                      value={selectedSpecialty}
+                      onChange={(e) => setSelectedSpecialty(e.target.value)}
+                      className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[200px]"
+                    >
+                      {specialties.map((specialty) => (
+                        <option key={specialty} value={specialty}>
+                          {specialty === "all" ? "All Specialties" : specialty}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Sort By */}
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[150px]"
+                  >
+                    <option value="name">Sort by Name</option>
+                    <option value="rating">Sort by Rating</option>
+                    <option value="experience">Sort by Experience</option>
+                  </select>
+                </div>
+              </CardBody>
+            </Card>
+
+            {/* Results Count */}
+            <div className="text-center text-black font-semibold mb-6">
+              Found {filteredDoctors.length} mental health professional
+              {filteredDoctors.length !== 1 ? "s" : ""}
+            </div>
+          </div>
+
+          {/* 4. DOCTORS GRID - SCROLLABLE CONTENT AREA */}
+          {/* Uses dynamic max-height and overflow-y-scroll to contain the results in a separate scroll area. */}
+          <div
+            className="flex-grow overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-8"
+            style={{ maxHeight: scrollableHeight }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {filteredDoctors.length > 0 ? (
+                filteredDoctors.map((doctor) => (
+                  <Card
+                    key={doctor.id}
+                    className="hover:scale-105 transition-all duration-300 cursor-pointer bg-white/90 dark:bg-gray-800/90 border border-white/20 shadow-lg hover:shadow-2xl"
+                  >
+                    {/* REDUCED PADDING ON CARD BODY FROM 'p-6' to 'p-3' */}
+                    <CardBody className="p-3">
+                      {/* Doctor Photo and Basic Info */}
+                      {/* REDUCED MARGIN BOTTOM FROM 'mb-4' to 'mb-2' */}
+                      <div className="flex items-start space-x-3 mb-2"> {/* Reduced space-x */}
+                        <div className="relative">
+                          {/* REDUCED IMAGE SIZE FROM 'w-16 h-16' to 'w-12 h-12' */}
+                          <img
+                            src={doctor.photo}
+                            alt={doctor.name}
+                            className="w-12 h-12 rounded-full object-cover border-4 border-white shadow-lg"
+                            onError={(e) => {
+                              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                doctor.name
+                              )}&size=64&background=6366f1&color=ffffff`;
+                            }}
+                          />
+                          <div className="absolute -bottom-1 -right-1 bg-green-500 w-4 h-4 rounded-full border-2 border-white"></div> {/* Reduced indicator size */}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          {/* Reduced font size from 'text-xl/lg' to 'text-base' */}
+                          <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
+                            {doctor.name}
+                          </h3>
+                          {/* Reduced margin bottom */}
+                          <div className="flex items-center space-x-1 mb-0.5"> {/* Reduced margin/space */}
+                            {getSpecialtyIcon(doctor.specialty)}
+                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300"> {/* Reduced font size */}
+                              {doctor.specialty}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" /> {/* Reduced icon size */}
+                            <span className="text-xs font-medium text-gray-900 dark:text-white"> {/* Reduced font size */}
+                              {doctor.rating}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              ({doctor.patients} patients)
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Hospital Info */}
+                      {/* REDUCED MARGIN BOTTOM FROM 'mb-4' to 'mb-2' */}
+                      <div className="mb-2">
+                        {/* Reduced font size from 'text-base' to 'text-sm' */}
+                        <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-0.5">
+                          {doctor.hospital}
+                        </h4>
+                        <div className="flex items-start space-x-1 text-xs text-gray-600 dark:text-gray-300"> {/* Reduced text size and spacing */}
+                          <MapPin className="w-3 h-3 mt-0.5 flex-shrink-0" /> {/* Reduced icon size */}
+                          <span className="leading-tight">{doctor.address}</span>
+                        </div>
+                      </div>
+
+                      {/* Specialties Tags */}
+                      {/* REDUCED MARGIN BOTTOM FROM 'mb-4' to 'mb-2' */}
+                      <div className="mb-2">
+                        <div className="flex flex-wrap gap-1">
+                          {doctor.specialties.map((specialty, index) => (
+                            <span
+                              key={index}
+                              className="px-1.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full" // Reduced padding
+                            >
+                              {specialty}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Experience & Contact */}
+                      <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-600"> {/* Reduced top padding */}
+                        <div className="text-xs"> {/* Reduced font size */}
+                          <span className="text-gray-500 dark:text-gray-400">
+                            Experience:{" "}
+                          </span>
+                          <span className="font-medium text-gray-900 dark:text-white">
+                            {doctor.experience}
+                          </span>
+                        </div>
+                        <a
+                          href={`tel:${doctor.phone}`}
+                          className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded-lg transition-colors duration-200 text-xs font-medium" // Reduced padding and font size
+                        >
+                          <Phone className="w-3 h-3" /> {/* Reduced icon size */}
+                          <span className="hidden sm:inline">Call Now</span>
+                        </a>
+                      </div>
+
+                      {/* Phone Number */}
+                      {/* REDUCED MARGIN TOP FROM 'mt-2' to 'mt-0.5' */}
+                      <div className="mt-0.5 text-center">
+                        <span className="text-xs text-gray-600 dark:text-gray-300"> {/* Reduced font size */}
+                          {doctor.phone}
+                        </span>
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))
+              ) : (
+                /* No Results */
+                <div className="text-center py-12 md:col-span-2 xl:col-span-3">
+                  <div className="text-gray-400 mb-4">
+                    <Search className="w-16 h-16 mx-auto" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
+                    No doctors found
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    Try adjusting your search criteria or filters
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
