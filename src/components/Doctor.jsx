@@ -54,7 +54,7 @@ const Doctor = () => {
         // Calculate the remaining height for the scrollable results area.
         // The parent container is h-full, which is 100vh of the screen in this setup.
         // We subtract the header height and a small margin/padding (e.g., 20px)
-        const newHeight = `calc(100vh - ${headerHeight}px - 20px)`;
+        const newHeight = `calc(100vh - ${headerHeight}px - 10px)`;
         setScrollableHeight(newHeight);
       }
     };
@@ -248,31 +248,26 @@ const Doctor = () => {
     switch (specialty) {
       case "Clinical Psychologist":
       case "Therapist":
-        return <Heart className="w-4 h-4 text-pink-500" />; // Reduced icon size
+        return <Heart className="w-4 h-4 text-pink-500" />;
       case "Psychiatrist":
       case "Neuropsychologist":
-        return <Brain className="w-4 h-4 text-purple-500" />; // Reduced icon size
+        return <Brain className="w-4 h-4 text-purple-500" />;
       case "Child Psychologist":
-        return <Users className="w-4 h-4 text-blue-500" />; // Reduced icon size
+        return <Users className="w-4 h-4 text-blue-500" />;
       default:
-        return <Heart className="w-4 h-4 text-green-500" />; // Reduced icon size
+        return <Heart className="w-4 h-4 text-green-500" />;
     }
   };
 
   return (
-    // 1. Outer container takes full viewport height and width. 
-    //    The entire Doctor.jsx component is unscrollable.
     <div className="h-screen w-screen flex flex-col justify-center items-center relative">
-      {/* 2. Inner container to hold the content, now ensures its h-full (100vh) */}
       <div className="absolute h-full w-full max-w-[96vw] rr tt11 inset-x-0 mx-auto flex flex-col justify-start items-center overflow-x-hidden">
-        <div className="w-full max-w-7xl mx-auto px-4 flex flex-col h-full">
+        <div className="w-full max-w-7xl mx-auto px-1 flex flex-col h-full">
           
-          {/* 3. FIXED HEADER SECTION (Ref to calculate height) */}
-          <div ref={headerRef} className="pt-6 pb-2">
+          <div ref={headerRef} className="pt-1 pb-0.5">
             
-            {/* Title */}
-            <div className="text-center mb-6">
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+            <div className="text-center mb-1.5">
+              <h1 className="text-4xl pt-3 md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-1.5">
                 Find Your Mental Health{" "}
                 <span key={rotatingWordIndex} className="animate-fade-scale-in animated-gradient-text">
                   {ROTATING_WORDS[rotatingWordIndex]}
@@ -284,11 +279,9 @@ const Doctor = () => {
               </p>
             </div>
 
-                 {/* Search and Filter Section - Sticky Search Bar */}
-                 <Card className="mb-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-              <CardBody className="p-6">
-                <div className="flex flex-col lg:flex-row gap-4 items-center">
-                  {/* Search Bar */}
+            <Card className="mb-0.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+              <CardBody className="p-1.5">
+                <div className="flex flex-col lg:flex-row gap-1.5 items-center">
                   <div className="relative flex-1 w-full lg:w-auto">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input
@@ -296,17 +289,16 @@ const Doctor = () => {
                       placeholder="Search doctors, hospitals, or specialties..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      className="w-full pl-10 pr-4 py-1.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
 
-                  {/* Specialty Filter */}
-                  <div className="flex items-center gap-4 w-full lg:w-auto">
+                  <div className="flex items-center gap-1.5 w-full lg:w-auto">
                     <Filter className="w-5 h-5 text-gray-500" />
                     <select
                       value={selectedSpecialty}
                       onChange={(e) => setSelectedSpecialty(e.target.value)}
-                      className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[200px]"
+                      className="px-2 py-1.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[200px]"
                     >
                       {specialties.map((specialty) => (
                         <option key={specialty} value={specialty}>
@@ -316,11 +308,10 @@ const Doctor = () => {
                     </select>
                   </div>
 
-                  {/* Sort By */}
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[150px]"
+                    className="px-2 py-1.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[150px]"
                   >
                     <option value="name">Sort by Name</option>
                     <option value="rating">Sort by Rating</option>
@@ -330,60 +321,51 @@ const Doctor = () => {
               </CardBody>
             </Card>
 
-            {/* Results Count */}
-            <div className="text-center text-black font-semibold mb-2">
+            <div className="text-center text-black font-semibold mb-0.5">
               Found {filteredDoctors.length} mental health professional
               {filteredDoctors.length !== 1 ? "s" : ""}
             </div>
           </div>
 
-          {/* 4. DOCTORS GRID - SCROLLABLE CONTENT AREA */}
-          {/* Uses dynamic max-height and overflow-y-scroll to contain the results in a separate scroll area. */}
           <div
-            className="flex-grow overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-8"
+            className="flex-grow overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-2"
             style={{ maxHeight: scrollableHeight }}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredDoctors.length > 0 ? (
                 filteredDoctors.map((doctor) => (
                   <Card
                     key={doctor.id}
                     className="hover:scale-105 transition-all duration-300 cursor-pointer bg-white/90 dark:bg-gray-800/90 border border-white/20 shadow-lg hover:shadow-2xl"
                   >
-                    {/* REDUCED PADDING ON CARD BODY FROM 'p-6' to 'p-3' */}
-                    <CardBody className="p-3">
-                      {/* Doctor Photo and Basic Info */}
-                      {/* REDUCED MARGIN BOTTOM FROM 'mb-4' to 'mb-2' */}
-                      <div className="flex items-start space-x-3 mb-2"> {/* Reduced space-x */}
+                    <CardBody className="p-1.5">
+                      <div className="flex items-start space-x-1.5 mb-0.5">
                         <div className="relative">
-                          {/* REDUCED IMAGE SIZE FROM 'w-16 h-16' to 'w-12 h-12' */}
                           <img
                             src={doctor.photo}
                             alt={doctor.name}
-                            className="w-12 h-12 rounded-full object-cover border-4 border-white shadow-lg"
+                            className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-lg"
                             onError={(e) => {
                               e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
                                 doctor.name
                               )}&size=64&background=6366f1&color=ffffff`;
                             }}
                           />
-                          <div className="absolute -bottom-1 -right-1 bg-green-500 w-4 h-4 rounded-full border-2 border-white"></div> {/* Reduced indicator size */}
+                          <div className="absolute -bottom-0.5 -right-0.5 bg-green-500 w-3 h-3 rounded-full border-2 border-white"></div>
                         </div>
                         <div className="flex-1 min-w-0">
-                          {/* Reduced font size from 'text-xl/lg' to 'text-base' */}
                           <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
                             {doctor.name}
                           </h3>
-                          {/* Reduced margin bottom */}
-                          <div className="flex items-center space-x-1 mb-0.5"> {/* Reduced margin/space */}
+                          <div className="flex items-center space-x-1 mb-0.5">
                             {getSpecialtyIcon(doctor.specialty)}
-                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300"> {/* Reduced font size */}
+                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
                               {doctor.specialty}
                             </span>
                           </div>
                           <div className="flex items-center space-x-1">
-                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" /> {/* Reduced icon size */}
-                            <span className="text-xs font-medium text-gray-900 dark:text-white"> {/* Reduced font size */}
+                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                            <span className="text-xs font-medium text-gray-900 dark:text-white">
                               {doctor.rating}
                             </span>
                             <span className="text-xs text-gray-500">
@@ -393,27 +375,22 @@ const Doctor = () => {
                         </div>
                       </div>
 
-                      {/* Hospital Info */}
-                      {/* REDUCED MARGIN BOTTOM FROM 'mb-4' to 'mb-2' */}
-                      <div className="mb-2">
-                        {/* Reduced font size from 'text-base' to 'text-sm' */}
+                      <div className="mb-0.5">
                         <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-0.5">
                           {doctor.hospital}
                         </h4>
-                        <div className="flex items-start space-x-1 text-xs text-gray-600 dark:text-gray-300"> {/* Reduced text size and spacing */}
-                          <MapPin className="w-3 h-3 mt-0.5 flex-shrink-0" /> {/* Reduced icon size */}
+                        <div className="flex items-start space-x-1 text-xs text-gray-600 dark:text-gray-300">
+                          <MapPin className="w-3 h-3 mt-0.5 flex-shrink-0" />
                           <span className="leading-tight">{doctor.address}</span>
                         </div>
                       </div>
 
-                      {/* Specialties Tags */}
-                      {/* REDUCED MARGIN BOTTOM FROM 'mb-4' to 'mb-2' */}
-                      <div className="mb-2">
-                        <div className="flex flex-wrap gap-1">
+                      <div className="mb-0.5">
+                        <div className="flex flex-wrap gap-0.5">
                           {doctor.specialties.map((specialty, index) => (
                             <span
                               key={index}
-                              className="px-1.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full" // Reduced padding
+                              className="px-1.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full"
                             >
                               {specialty}
                             </span>
@@ -421,9 +398,8 @@ const Doctor = () => {
                         </div>
                       </div>
 
-                      {/* Experience & Contact */}
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-600"> {/* Reduced top padding */}
-                        <div className="text-xs"> {/* Reduced font size */}
+                      <div className="flex items-center justify-between pt-0.5 border-t border-gray-200 dark:border-gray-600">
+                        <div className="text-xs">
                           <span className="text-gray-500 dark:text-gray-400">
                             Experience:{" "}
                           </span>
@@ -433,17 +409,15 @@ const Doctor = () => {
                         </div>
                         <a
                           href={`tel:${doctor.phone}`}
-                          className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded-lg transition-colors duration-200 text-xs font-medium" // Reduced padding and font size
+                          className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded-lg transition-colors duration-200 text-xs font-medium"
                         >
-                          <Phone className="w-3 h-3" /> {/* Reduced icon size */}
+                          <Phone className="w-3 h-3" />
                           <span className="hidden sm:inline">Call Now</span>
                         </a>
                       </div>
 
-                      {/* Phone Number */}
-                      {/* REDUCED MARGIN TOP FROM 'mt-2' to 'mt-0.5' */}
                       <div className="mt-0.5 text-center">
-                        <span className="text-xs text-gray-600 dark:text-gray-300"> {/* Reduced font size */}
+                        <span className="text-xs text-gray-600 dark:text-gray-300">
                           {doctor.phone}
                         </span>
                       </div>
@@ -451,7 +425,6 @@ const Doctor = () => {
                   </Card>
                 ))
               ) : (
-                /* No Results */
                 <div className="text-center py-12 md:col-span-2 xl:col-span-3">
                   <div className="text-gray-400 mb-4">
                     <Search className="w-16 h-16 mx-auto" />

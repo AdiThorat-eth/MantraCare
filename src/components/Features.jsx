@@ -91,9 +91,9 @@ const Features = () => {
       sections: [
         {
           id: "pdf-1",
-          title: "Yoga & Meditation Information",
+          title: "Reading Resource",
           description:
-            "Explore trusted online resources about yoga postures, meditation techniques, and their benefits.",
+            "Resources for yoga postures, meditation, and wellness benefits.",
           icon: "📄",
           color: "cyan",
           type: "pdfs",
@@ -152,7 +152,7 @@ const Features = () => {
           id: "vid-1",
           title: "Video Resources",
           description:
-            "Short videos covering anxiety, depression, and core coping skills with practical demonstrations.",
+            "Short videos demonstrate coping skills for anxiety and depression.",
           icon: "🎥",
           color: "purple",
           type: "videos",
@@ -237,7 +237,7 @@ const Features = () => {
           id: "med-1",
           title: "Basic Meditation & Yoga Poses",
           description:
-            "Beginner-friendly yoga postures and meditation exercises to reduce stress and increase focus.",
+            "Yoga & Meditation: poses and exercises to lower stress and boost focus.",
           icon: "🧘",
           color: "green",
           type: "meditation",
@@ -304,7 +304,7 @@ const Features = () => {
           id: "aud-1",
           title: "Audio Resources",
           description:
-            "Listen to calming tracks, guided relaxations, and short talks on mental wellness.",
+            "Audio: Calming tracks, guided relaxation, and mental wellness talks.",
           icon: "🎧",
           color: "blue",
           type: "audio",
