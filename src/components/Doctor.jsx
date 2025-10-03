@@ -339,7 +339,7 @@ const Doctor = () => {
                     className="hover:scale-105 transition-all duration-300 cursor-pointer bg-white/90 dark:bg-gray-800/90 border border-white/20 shadow-lg hover:shadow-2xl"
                   >
                     <CardBody className="p-1.5">
-                      <div className="flex items-start space-x-1.5 mb-0.5">
+                      <div className="flex items-start space-x-1.5 mb-2">
                         <div className="relative">
                           <img
                             src={doctor.photo}
@@ -375,8 +375,8 @@ const Doctor = () => {
                         </div>
                       </div>
 
-                      <div className="mb-0.5">
-                        <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-0.5">
+                      <div className="mb-2">
+                        <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
                           {doctor.hospital}
                         </h4>
                         <div className="flex items-start space-x-1 text-xs text-gray-600 dark:text-gray-300">
@@ -386,7 +386,7 @@ const Doctor = () => {
                       </div>
 
                       <div className="mb-0.5">
-                        <div className="flex flex-wrap gap-0.5">
+                        <div className="flex flex-wrap gap-2">
                           {doctor.specialties.map((specialty, index) => (
                             <span
                               key={index}
