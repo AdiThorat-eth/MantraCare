@@ -255,9 +255,9 @@ const Price = () => {
     {
       // MODIFIED: Added raw amount values for calculation
       name: "Professional Care",
-      price: isAnnual ? "₹3,899" : "₹5,499",
-      monthlyAmount: 5499,
-      annualAmount: 3899,
+      price: isAnnual ? "₹1999" : "₹99",
+      monthlyAmount: 99,
+      annualAmount: 1999,
       period: "/month",
       description: "Comprehensive support with professional guidance",
       features: [
