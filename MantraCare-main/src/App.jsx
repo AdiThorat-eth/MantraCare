@@ -1,6 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Lenis from 'lenis'
+console.log("VITE_API_BASE_URL as seen by Vercel:", import.meta.env.VITE_API_BASE_URL);
 
 // ====================================================================
 // 1. CRITICAL COMPONENTS (Standard Import - Load immediately)
