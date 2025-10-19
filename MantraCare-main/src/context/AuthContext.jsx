@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import API_CONFIG from "../config/api";
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(`Login failed: ${res.status} - ${text}`);
+        throw new Error(text || "Login failed");
       }
 
       const data = await res.json();
@@ -43,7 +43,6 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (err) {
-      console.error(err);
       return { success: false, error: err.message };
     } finally {
       setIsLoading(false);
@@ -61,23 +60,11 @@ export const AuthProvider = ({ children }) => {
 
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(`Register failed: ${res.status} - ${text}`);
+        throw new Error(text || "Register failed");
       }
 
-      const data = await res.json();
-      const token = data.data?.token || data.token;
-      const user = data.data?.user || data.user;
-
-      if (!token) throw new Error("No token received from backend");
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-      setToken(token);
-      setUser(user);
-
-      return { success: true };
+      return { success: true }; // no token storage
     } catch (err) {
-      console.error(err);
       return { success: false, error: err.message };
     } finally {
       setIsLoading(false);
@@ -95,9 +82,7 @@ export const AuthProvider = ({ children }) => {
   const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider
-      value={{ user, token, isLoading, login, register, logout, isAuthenticated }}
-    >
+    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

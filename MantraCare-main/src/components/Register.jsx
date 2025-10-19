@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import API_CONFIG from "../config/api";
 
 const RegisterPage = () => {
-  const { register, isLoading } = useAuth();
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,6 +11,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,9 +27,31 @@ const RegisterPage = () => {
       return;
     }
 
-    const result = await register(firstName, lastName, email, password);
-    if (result.success) setSuccess("Registration successful! You can login now.");
-    else setError(result.error || "Registration failed");
+    setIsLoading(true);
+
+    try {
+      const res = await fetch(API_CONFIG.url("/api/auth/register"), {
+        method: "POST",
+        headers: API_CONFIG.getHeaders(),
+        body: JSON.stringify({ firstName, lastName, email, password }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Registration failed");
+      }
+
+      setSuccess("Registration successful! You can login now.");
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      setError(err.message || "Registration failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

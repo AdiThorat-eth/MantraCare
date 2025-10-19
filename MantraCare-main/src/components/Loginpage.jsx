@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import API_CONFIG from "../config/api";
 
 const LoginPage = () => {
-  const { login, isLoading } = useAuth();
+  const { isLoading } = useAuth(); // keep isLoading
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -15,9 +16,31 @@ const LoginPage = () => {
     e.preventDefault();
     setError("");
 
-    const result = await login(email, password);
-    if (result.success) navigate("/dashboard"); // redirect to dashboard
-    else setError(result.error || "Login failed");
+    try {
+      const res = await fetch(API_CONFIG.url("/api/auth/login"), {
+        method: "POST",
+        headers: API_CONFIG.getHeaders(),
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Login failed");
+      }
+
+      const data = await res.json();
+      const token = data.data?.token || data.token || data.accessToken;
+      const user = data.data?.user || data.user;
+
+      if (!token) throw new Error("No token received from server");
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.message || "Login failed. Please try again.");
+    }
   };
 
   return (
