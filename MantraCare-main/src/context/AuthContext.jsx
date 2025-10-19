@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import API_CONFIG from '../config/api';
 
 const AuthContext = createContext();
 
@@ -29,10 +30,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setIsLoading(true);
     try {
-      console.log('Attempting login with:', { email, password });
-      
-      // Use your actual login endpoint - adjust this URL to match your backend
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      // Use API_CONFIG.url so the env base URL is respected
+      const res = await fetch(API_CONFIG.url('/api/auth/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,43 +39,29 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
       });
 
-      console.log('Login response status:', response.status);
-      console.log('Login response headers:', response.headers);
-
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Login failed:', errorData);
-        throw new Error(`Login failed: ${response.status} - ${errorData}`);
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(`Login failed: ${res.status} - ${errorData}`);
       }
 
-      const data = await response.json();
-      console.log('Login successful, response data:', data);
+      const data = await res.json();
       
-      // Extract token from response - your backend returns token in data.token
-      const token = data.data?.token || data.token || data.accessToken || data.jwt || data.access_token;
-      const user = data.data || data.user || data;
-      
-      console.log('Extracted token:', token);
-      console.log('Extracted user:', user);
-      
-      if (!token) {
-        console.error('Token extraction failed. Available data:', data);
+      // Extract token & user with safe fallbacks
+      const extractedToken = data.data?.token || data.token || data.accessToken || data.jwt || data.access_token;
+      const extractedUser = data.data?.user || data.user || data.data || data;
+
+      if (!extractedToken) {
         throw new Error('No token received from server');
       }
       
-      // Store token and user data
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', extractedToken);
+      localStorage.setItem('user', JSON.stringify(extractedUser));
       
-      setToken(token);
-      setUser(user);
-      
-      console.log('Token stored:', token);
-      console.log('User stored:', user);
+      setToken(extractedToken);
+      setUser(extractedUser);
       
       return { success: true };
     } catch (error) {
-      console.error('Login error:', error);
       return { success: false, error: error.message };
     } finally {
       setIsLoading(false);

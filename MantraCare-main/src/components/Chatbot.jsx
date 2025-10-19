@@ -58,28 +58,23 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      console.log('Sending message to:', `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CHAT_MESSAGE}`);
+      const url = API_CONFIG.url(API_CONFIG.ENDPOINTS.CHAT_MESSAGE);
+      console.log('Sending message to:', url);
       console.log('Headers:', API_CONFIG.getHeaders());
       
-      const res = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CHAT_MESSAGE}`, {
+      const res = await fetch(url, {
         method: 'POST',
         headers: API_CONFIG.getHeaders(),
         body: JSON.stringify({ message: messageText })
       });
 
       console.log('Response status:', res.status);
-      console.log('Response headers:', res.headers);
-
       if (!res.ok) {
         const errorText = await res.text();
-        console.error('Server error:', errorText);
         throw new Error(`HTTP ${res.status}: ${errorText}`);
       }
       
       const data = await res.json();
-      console.log('Response data:', data);
-      console.log('Response data keys:', Object.keys(data));
-      console.log('Response data type:', typeof data);
 
       // Handle different response formats from your backend
       let responseText = 'No response received';
@@ -118,7 +113,7 @@ const Chatbot = () => {
       let errorText = "I'm sorry, I'm having trouble connecting right now. Please try again or contact our support team.";
       
       if (error.message.includes('Failed to fetch')) {
-        errorText = "Unable to connect to the server. Please check if your backend is running on http://localhost:8080";
+        errorText = `Unable to connect to the server. Please check your backend base URL: ${API_CONFIG.BASE_URL}`;
       } else if (error.message.includes('401')) {
         errorText = "Authentication required. Please log in again.";
       } else if (error.message.includes('404')) {

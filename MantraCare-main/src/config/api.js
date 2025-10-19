@@ -1,11 +1,19 @@
 // API Configuration
 const API_CONFIG = {
-  // Change this to your backend URL
-  BASE_URL: 'http://localhost:8080',
+  // Use Vite env var in production, fallback to localhost for dev
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
   
-  // API endpoints
+  // API endpoints (relative)
   ENDPOINTS: {
     CHAT_MESSAGE: '/api/chatbot/message',
+  },
+
+  // Build full URL helper
+  url: (endpoint) => {
+    // Accept either relative endpoints from ENDPOINTS or full URLs
+    if (!endpoint) return API_CONFIG.BASE_URL;
+    if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) return endpoint;
+    return `${API_CONFIG.BASE_URL.replace(/\/+$/,'')}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
   },
   
   // Headers
@@ -26,7 +34,7 @@ const API_CONFIG = {
   // Debug function to test connection
   testConnection: async () => {
     try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}/api/health`, {
+      const response = await fetch(API_CONFIG.url('/api/health'), {
         method: 'GET',
         headers: API_CONFIG.getHeaders(),
       });

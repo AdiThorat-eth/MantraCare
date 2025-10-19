@@ -1,5 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Lenis from 'lenis'
 
 // ====================================================================
 // 1. CRITICAL COMPONENTS (Standard Import - Load immediately)
@@ -56,6 +57,19 @@ const LazyFooter = lazy(() =>
 
 // Optimized Loader Component
 const Loader = () => {
+
+  useEffect(() => {
+    // Initialize Lenis
+    const lenis = new Lenis({
+      autoRaf: true,
+    });
+
+    // Listen for the scroll event and log the event data
+    lenis.on('scroll', (e) => {
+      console.log(e);
+    });
+  })
+
   return (
     <div className="relative w-[65px] aspect-square">
       <span className="absolute rounded-[50px] animate-loaderAnim shadow-[inset_0_0_0_3px] shadow-white" />
