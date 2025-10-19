@@ -1,46 +1,45 @@
-// API Configuration
+// src/config/api.js
+console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
+
 const API_CONFIG = {
-  // Use Vite env var in production, fallback to localhost for dev
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
-  
-  // API endpoints (relative)
+  // Base URL from environment or fallback to localhost
+  BASE_URL: import.meta.env.VITE_API_BASE_URL?.trim() || "http://localhost:8080",
+
   ENDPOINTS: {
-    CHAT_MESSAGE: '/api/chatbot/message',
+    AUTH_LOGIN: "/api/auth/login",
+    AUTH_REGISTER: "/api/auth/register",
+    CHAT_MESSAGE: "/api/chatbot/message",
   },
 
-  // Build full URL helper
+  // Builds full URL correctly
   url: (endpoint) => {
-    // Accept either relative endpoints from ENDPOINTS or full URLs
     if (!endpoint) return API_CONFIG.BASE_URL;
-    if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) return endpoint;
-    return `${API_CONFIG.BASE_URL.replace(/\/+$/,'')}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
-  },
-  
-  // Headers
-  getHeaders: () => {
-    const token = localStorage.getItem('token');
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-    
-    // Only add Authorization header if token exists
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+    if (endpoint.startsWith("http://") || endpoint.startsWith("https://")) {
+      return endpoint;
     }
-    
+    const base = API_CONFIG.BASE_URL.replace(/\/+$/, "");
+    const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    return `${base}${path}`;
+  },
+
+  // Build headers with token
+  getHeaders: () => {
+    const token = localStorage.getItem("token");
+    const headers = { "Content-Type": "application/json" };
+    if (token) headers.Authorization = `Bearer ${token}`;
     return headers;
   },
-  
-  // Debug function to test connection
+
+  // Quick health check
   testConnection: async () => {
     try {
-      const response = await fetch(API_CONFIG.url('/api/health'), {
-        method: 'GET',
+      const res = await fetch(API_CONFIG.url("/api/health"), {
+        method: "GET",
         headers: API_CONFIG.getHeaders(),
       });
-      return response.ok;
-    } catch (error) {
-      console.error('Connection test failed:', error);
+      return res.ok;
+    } catch (err) {
+      console.error("Connection test failed:", err);
       return false;
     }
   },
