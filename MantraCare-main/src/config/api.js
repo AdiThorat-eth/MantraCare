@@ -1,48 +1,57 @@
 // src/config/api.js
-console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
+console.log("Using Base URL:", import.meta.env.VITE_API_BASE_URL);
 
+
+// API Configuration
 const API_CONFIG = {
-  // Base URL from environment or fallback to localhost
-  BASE_URL: import.meta.env.VITE_API_BASE_URL?.trim() || "http://localhost:8080",
+  // Automatically choose backend based on environment
+  BASE_URL:
+    import.meta.env.VITE_API_BASE_URL ||
+    (window.location.hostname === 'localhost'
+      ? 'http://localhost:8080'
+      : 'https://mantra-comprehensive-mental-health.onrender.com'),
 
+  // API endpoints (relative)
   ENDPOINTS: {
-    AUTH_LOGIN: "/api/auth/login",
-    AUTH_REGISTER: "/api/auth/register",
-    CHAT_MESSAGE: "/api/chatbot/message",
+    CHAT_MESSAGE: '/api/chatbot/message',
   },
 
-  // Builds full URL correctly
+  // Build full URL helper
   url: (endpoint) => {
     if (!endpoint) return API_CONFIG.BASE_URL;
-    if (endpoint.startsWith("http://") || endpoint.startsWith("https://")) {
+    if (endpoint.startsWith('http://') || endpoint.startsWith('https://'))
       return endpoint;
-    }
-    const base = API_CONFIG.BASE_URL.replace(/\/+$/, "");
-    const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-    return `${base}${path}`;
+    return `${API_CONFIG.BASE_URL.replace(/\/+$/, '')}${
+      endpoint.startsWith('/') ? '' : '/'
+    }${endpoint}`;
   },
 
-  // Build headers with token
+  // Headers
   getHeaders: () => {
-    const token = localStorage.getItem("token");
-    const headers = { "Content-Type": "application/json" };
-    if (token) headers.Authorization = `Bearer ${token}`;
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
     return headers;
   },
 
-  // Quick health check
+  // Debug helper
   testConnection: async () => {
     try {
-      const res = await fetch(API_CONFIG.url("/api/health"), {
-        method: "GET",
+      const response = await fetch(API_CONFIG.url('/api/health'), {
+        method: 'GET',
         headers: API_CONFIG.getHeaders(),
       });
-      return res.ok;
-    } catch (err) {
-      console.error("Connection test failed:", err);
+      return response.ok;
+    } catch (error) {
+      console.error('Connection test failed:', error);
       return false;
     }
   },
 };
+
+// Log to confirm which base URL is used
+console.log('🔍 Using Base URL:', API_CONFIG.BASE_URL);
 
 export default API_CONFIG;
