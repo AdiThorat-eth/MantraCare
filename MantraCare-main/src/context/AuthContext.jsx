@@ -2,40 +2,24 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import API_CONFIG from '../config/api';
 
 const AuthContext = createContext();
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState(false);
 
-  // Check if user is authenticated on mount
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
+  // 🔹 LOGIN
   const login = async (email, password) => {
     setIsLoading(true);
     try {
-      // Use API_CONFIG.url so the env base URL is respected
-      const res = await fetch(API_CONFIG.url('/api/auth/login'), {
+      const res = await fetch(API_CONFIG.url(API_CONFIG.ENDPOINTS.LOGIN), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: API_CONFIG.getHeaders(),
         body: JSON.stringify({ email, password }),
       });
 
@@ -45,29 +29,61 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await res.json();
-      
-      // Extract token & user with safe fallbacks
-      const extractedToken = data.data?.token || data.token || data.accessToken || data.jwt || data.access_token;
-      const extractedUser = data.data?.user || data.user || data.data || data;
+      const extractedToken = data.data?.token || data.token;
+      const extractedUser = data.data?.user || data.user;
 
-      if (!extractedToken) {
-        throw new Error('No token received from server');
-      }
-      
+      if (!extractedToken) throw new Error('No token received from server');
+
       localStorage.setItem('token', extractedToken);
       localStorage.setItem('user', JSON.stringify(extractedUser));
-      
+
       setToken(extractedToken);
       setUser(extractedUser);
-      
       return { success: true };
     } catch (error) {
+      console.error(error);
       return { success: false, error: error.message };
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 🔹 REGISTER
+  const register = async (firstName, lastName, email, password) => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(API_CONFIG.url(API_CONFIG.ENDPOINTS.REGISTER), {
+        method: 'POST',
+        headers: API_CONFIG.getHeaders(),
+        body: JSON.stringify({ firstName, lastName, email, password }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(`Register failed: ${res.status} - ${errorData}`);
+      }
+
+      const data = await res.json();
+      const extractedToken = data.data?.token || data.token;
+      const extractedUser = data.data?.user || data.user;
+
+      if (!extractedToken) throw new Error('No token received from server');
+
+      localStorage.setItem('token', extractedToken);
+      localStorage.setItem('user', JSON.stringify(extractedUser));
+
+      setToken(extractedToken);
+      setUser(extractedUser);
+      return { success: true };
+    } catch (error) {
+      console.error(error);
+      return { success: false, error: error.message };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 🔹 LOGOUT
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -77,17 +93,10 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthenticated = !!token;
 
-  const value = {
-    user,
-    token,
-    isLoading,
-    login,
-    logout,
-    isAuthenticated,
-  };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{ user, token, isLoading, login, logout, register, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

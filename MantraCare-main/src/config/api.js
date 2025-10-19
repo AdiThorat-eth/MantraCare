@@ -2,21 +2,19 @@
 console.log("Using Base URL:", import.meta.env.VITE_API_BASE_URL);
 
 
-// API Configuration
 const API_CONFIG = {
-  // Automatically choose backend based on environment
   BASE_URL:
     import.meta.env.VITE_API_BASE_URL ||
     (window.location.hostname === 'localhost'
       ? 'http://localhost:8080'
       : 'https://mantra-comprehensive-mental-health.onrender.com'),
 
-  // API endpoints (relative)
   ENDPOINTS: {
+    LOGIN: '/api/auth/login',
+    REGISTER: '/api/auth/register',
     CHAT_MESSAGE: '/api/chatbot/message',
   },
 
-  // Build full URL helper
   url: (endpoint) => {
     if (!endpoint) return API_CONFIG.BASE_URL;
     if (endpoint.startsWith('http://') || endpoint.startsWith('https://'))
@@ -26,7 +24,6 @@ const API_CONFIG = {
     }${endpoint}`;
   },
 
-  // Headers
   getHeaders: () => {
     const token = localStorage.getItem('token');
     const headers = {
@@ -36,7 +33,6 @@ const API_CONFIG = {
     return headers;
   },
 
-  // Debug helper
   testConnection: async () => {
     try {
       const response = await fetch(API_CONFIG.url('/api/health'), {
@@ -51,7 +47,7 @@ const API_CONFIG = {
   },
 };
 
-// Log to confirm which base URL is used
-console.log('🔍 Using Base URL:', API_CONFIG.BASE_URL);
+// Debug log to verify deployed base URL
+console.log('🔍 Using API Base URL:', API_CONFIG.BASE_URL);
 
 export default API_CONFIG;
