@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import API_CONFIG from "../config/api";
+import { useAuth } from "../context/AuthContext";
 
 const RegisterPage = () => {
+  const { register, isLoading } = useAuth();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -11,46 +13,35 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
+    // Validation
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       setError("All fields are required");
       return;
     }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      const res = await fetch(API_CONFIG.url("/api/auth/register"), {
-        method: "POST",
-        headers: API_CONFIG.getHeaders(),
-        body: JSON.stringify({ firstName, lastName, email, password }),
-      });
-
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(errText || "Registration failed");
-      }
-
+    // Call AuthContext register
+    const result = await register(firstName, lastName, email, password);
+    if (result.success) {
       setSuccess("Registration successful! You can login now.");
+      // Optionally, clear form fields
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-    } catch (err) {
-      setError(err.message || "Registration failed");
-    } finally {
-      setIsLoading(false);
+    } else {
+      setError(result.error || "Registration failed");
     }
   };
 
@@ -59,8 +50,13 @@ const RegisterPage = () => {
       <Row className="justify-content-md-center">
         <Col md={6}>
           <h2 className="mt-5">Register</h2>
+
+          {/* Error Alert */}
           {error && <Alert variant="danger">{error}</Alert>}
+
+          {/* Success Alert */}
           {success && <Alert variant="success">{success}</Alert>}
+
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formFirstName" className="mb-3">
               <Form.Label>First Name</Form.Label>
@@ -71,6 +67,7 @@ const RegisterPage = () => {
                 placeholder="Enter first name"
               />
             </Form.Group>
+
             <Form.Group controlId="formLastName" className="mb-3">
               <Form.Label>Last Name</Form.Label>
               <Form.Control
@@ -80,6 +77,7 @@ const RegisterPage = () => {
                 placeholder="Enter last name"
               />
             </Form.Group>
+
             <Form.Group controlId="formEmail" className="mb-3">
               <Form.Label>Email</Form.Label>
               <Form.Control
@@ -89,6 +87,7 @@ const RegisterPage = () => {
                 placeholder="Enter email"
               />
             </Form.Group>
+
             <Form.Group controlId="formPassword" className="mb-3">
               <Form.Label>Password</Form.Label>
               <Form.Control
@@ -98,6 +97,7 @@ const RegisterPage = () => {
                 placeholder="Enter password"
               />
             </Form.Group>
+
             <Form.Group controlId="formConfirmPassword" className="mb-3">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
@@ -107,10 +107,12 @@ const RegisterPage = () => {
                 placeholder="Confirm password"
               />
             </Form.Group>
+
             <Button type="submit" variant="primary" disabled={isLoading}>
               {isLoading ? "Registering..." : "Register"}
             </Button>
           </Form>
+
           <p className="mt-3">
             Already have an account? <Link to="/login">Login</Link>
           </p>

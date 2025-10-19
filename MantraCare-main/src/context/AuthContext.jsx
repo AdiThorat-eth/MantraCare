@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Login
   const login = async (email, password) => {
     setIsLoading(true);
     try {
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text || "Login failed");
+        throw new Error(`Login failed: ${res.status} - ${text}`);
       }
 
       const data = await res.json();
@@ -43,12 +44,14 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (err) {
+      console.error(err);
       return { success: false, error: err.message };
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Register
   const register = async (firstName, lastName, email, password) => {
     setIsLoading(true);
     try {
@@ -60,17 +63,30 @@ export const AuthProvider = ({ children }) => {
 
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text || "Register failed");
+        throw new Error(`Register failed: ${res.status} - ${text}`);
       }
 
-      return { success: true }; // no token storage
+      const data = await res.json();
+      const token = data.data?.token || data.token;
+      const user = data.data?.user || data.user;
+
+      if (!token) throw new Error("No token received from backend");
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setToken(token);
+      setUser(user);
+
+      return { success: true };
     } catch (err) {
+      console.error(err);
       return { success: false, error: err.message };
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Logout
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -79,10 +95,10 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
-  const isAuthenticated = !!token;
-
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{ user, token, isLoading, login, register, logout, isAuthenticated: !!token }}
+    >
       {children}
     </AuthContext.Provider>
   );
