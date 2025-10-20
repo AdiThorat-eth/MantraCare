@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
       console.log('Attempting login with:', { email, password });
       
       // Use your actual login endpoint - adjust this URL to match your backend
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch('https://mantra-comprehensive-mental-health.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

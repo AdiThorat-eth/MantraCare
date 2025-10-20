@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8080", // Change this to your backend URL
+        target: "https://mantra-comprehensive-mental-health.onrender.com", // Change this to your backend URL
         changeOrigin: true,
         secure: false,
       },

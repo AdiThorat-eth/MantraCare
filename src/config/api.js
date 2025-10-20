@@ -1,7 +1,7 @@
 // API Configuration
 const API_CONFIG = {
   // Change this to your backend URL
-  BASE_URL: 'http://localhost:8080',
+  BASE_URL: 'https://mantra-comprehensive-mental-health.onrender.com',
   
   // API endpoints
   ENDPOINTS: {
