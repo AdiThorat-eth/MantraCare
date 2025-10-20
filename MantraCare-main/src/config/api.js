@@ -1,21 +1,22 @@
 /**
- * ✅ API Configuration - Safe for both local & production
- * Reads backend URL dynamically from /public/env.js (window._env_)
+ * ✅ API Configuration - Safe for both Local & Production
+ * Uses runtime config from /public/env.js (window._env_)
  */
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined" && window._env_?.API_BASE_URL) {
+    // 🟢 Production or custom runtime config
     return window._env_.API_BASE_URL;
   }
 
-  // 🧪 Local fallback (only when running vite dev server)
-  if (window.location.hostname === "localhost") {
+  // 🧪 Local development fallback
+  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
     console.warn("⚠️ Using localhost backend for development");
     return "http://localhost:8080";
   }
 
   throw new Error(
-    "❌ No API_BASE_URL found! Make sure /public/env.js is loaded in index.html."
+    "❌ No API_BASE_URL found! Make sure /public/env.js is loaded in index.html or set VITE_API_BASE_URL in environment."
   );
 };
 
@@ -39,6 +40,6 @@ const API_CONFIG = {
   },
 };
 
-console.log("🔍 Using API Base URL:", API_CONFIG.BASE_URL);
+console.log("🌍 Active API Base URL:", API_CONFIG.BASE_URL);
 
 export default API_CONFIG;

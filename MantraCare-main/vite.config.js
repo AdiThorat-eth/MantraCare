@@ -1,15 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
+// ✅ Clean, simple, production-ready Vite config
 export default defineConfig({
   plugins: [react()],
+
+  // Optional: custom base path if you deploy to a subdirectory (uncomment if needed)
   // base: process.env.VITE_BASE_PATH || "/MantraCare",
+
   server: {
+    // You can still run the backend locally during development if needed
     proxy: {
       "/api": {
-        // Use env var for dev proxy target if provided, otherwise fallback to localhost
-        target: process.env.VITE_API_BASE_URL || "http://localhost:8080",
+        target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
       },
