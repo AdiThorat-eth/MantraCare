@@ -1,73 +1,108 @@
-import React, { createContext, useContext, useState } from "react";
-import API_CONFIG from "../config/api";
-import { useNavigate } from "react-router-dom";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
-export const useAuth = () => useContext(AuthContext);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState(false);
+
+  // Check if user is authenticated on mount
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+    
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const login = async (email, password) => {
     setIsLoading(true);
     try {
-      const res = await fetch(API_CONFIG.url(API_CONFIG.ENDPOINTS.LOGIN), {
-        method: "POST",
-        headers: API_CONFIG.getHeaders(),
+      console.log('Attempting login with:', { email, password });
+      
+      // Use your actual login endpoint - adjust this URL to match your backend
+      const response = await fetch('https://mantra-comprehensive-mental-health.onrender.com/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login failed");
 
-      const token = data.data?.token || data.token;
-      const user = data.data?.user || data.user;
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      console.log('Login response status:', response.status);
+      console.log('Login response headers:', response.headers);
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Login failed:', errorData);
+        throw new Error(`Login failed: ${response.status} - ${errorData}`);
+      }
+
+      const data = await response.json();
+      console.log('Login successful, response data:', data);
+      
+      // Extract token from response - your backend returns token in data.token
+      const token = data.data?.token || data.token || data.accessToken || data.jwt || data.access_token;
+      const user = data.data || data.user || data;
+      
+      console.log('Extracted token:', token);
+      console.log('Extracted user:', user);
+      
+      if (!token) {
+        console.error('Token extraction failed. Available data:', data);
+        throw new Error('No token received from server');
+      }
+      
+      // Store token and user data
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
       setToken(token);
       setUser(user);
+      
+      console.log('Token stored:', token);
+      console.log('User stored:', user);
+      
       return { success: true };
-    } catch (err) {
-      console.error("❌ Login Error:", err);
-      return { success: false, error: err.message };
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const register = async (firstName, lastName, email, password) => {
-    setIsLoading(true);
-    try {
-      const res = await fetch(API_CONFIG.url(API_CONFIG.ENDPOINTS.REGISTER), {
-        method: "POST",
-        headers: API_CONFIG.getHeaders(),
-        body: JSON.stringify({ firstName, lastName, email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed");
-
-      return { success: true };
-    } catch (err) {
-      console.error("❌ Register Error:", err);
-      return { success: false, error: err.message };
+    } catch (error) {
+      console.error('Login error:', error);
+      return { success: false, error: error.message };
     } finally {
       setIsLoading(false);
     }
   };
 
   const logout = () => {
-    localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
-    navigate("/login");
+  };
+
+  const isAuthenticated = !!token;
+
+  const value = {
+    user,
+    token,
+    isLoading,
+    login,
+    logout,
+    isAuthenticated,
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, token, isLoading, login, register, logout, isAuthenticated: !!token }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

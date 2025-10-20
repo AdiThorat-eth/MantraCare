@@ -1,3 +1,0 @@
-window._env_ = {
-  API_BASE_URL: "https://mantra-comprehensive-mental-health.onrender.com"
-};

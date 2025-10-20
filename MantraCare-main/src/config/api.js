@@ -1,45 +1,42 @@
-/**
- * ✅ API Configuration - Safe for both Local & Production
- * Uses runtime config from /public/env.js (window._env_)
- */
-
-const getBaseUrl = () => {
-  if (typeof window !== "undefined" && window._env_?.API_BASE_URL) {
-    // 🟢 Production or custom runtime config
-    return window._env_.API_BASE_URL;
-  }
-
-  // 🧪 Local development fallback
-  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-    console.warn("⚠️ Using localhost backend for development");
-    return "http://localhost:8080";
-  }
-
-  throw new Error(
-    "❌ No API_BASE_URL found! Make sure /public/env.js is loaded in index.html or set VITE_API_BASE_URL in environment."
-  );
-};
-
-const BASE_URL = getBaseUrl();
-
+// API Configuration
 const API_CONFIG = {
-  BASE_URL,
+  // Change this to your backend URL
+  BASE_URL: 'https://mantra-comprehensive-mental-health.onrender.com',
+  
+  // API endpoints
   ENDPOINTS: {
-    LOGIN: "/api/auth/login",
-    REGISTER: "/api/auth/register",
+    CHAT_MESSAGE: '/api/chatbot/message',
   },
-  url: (endpoint) =>
-    `${BASE_URL.replace(/\/+$/, "")}${
-      endpoint.startsWith("/") ? "" : "/"
-    }${endpoint}`,
+  
+  // Headers
   getHeaders: () => {
-    const token = localStorage.getItem("token");
-    const headers = { "Content-Type": "application/json" };
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    
+    // Only add Authorization header if token exists
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     return headers;
   },
+  
+  // Debug function to test connection
+  testConnection: async () => {
+    try {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/api/health`, {
+        method: 'GET',
+        headers: API_CONFIG.getHeaders(),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Connection test failed:', error);
+      return false;
+    }
+  },
 };
 
-console.log("🌍 Active API Base URL:", API_CONFIG.BASE_URL);
-
 export default API_CONFIG;
+  
